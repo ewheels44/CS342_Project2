@@ -17,14 +17,10 @@ import javafx.scene.layout.VBox;
 
 public class JavaFXTemplate extends Application {
 
-  private GameButton piece;
   private GameLogic gameLogic;
   private GridPane gameboard;
 
   private BorderPane root;
-  private Scene ogtheme;
-  private Scene themeOne;
-  private Scene themeTwo;
   private MenuBar settings;
   private Scene game;
   
@@ -33,6 +29,7 @@ public class JavaFXTemplate extends Application {
   private static EventHandler<ActionEvent> disableButton;
   private EventHandler<ActionEvent> dispScene;
   private EventHandler<ActionEvent> changeTheme;
+
 
   //
   // this is a test
@@ -61,7 +58,8 @@ public class JavaFXTemplate extends Application {
   //
   // createGameScene (Original theme)
   //
-  // creates the scene needed for the game?
+  // creates everything so settings, gameboard and logic 
+  // can be reused
   //
   public Scene createGameScene(){
     root = new BorderPane();
@@ -75,41 +73,92 @@ public class JavaFXTemplate extends Application {
     Menu gameplay = new Menu("Game play");
     Menu themes = new Menu("Themes");
 
+    //
+    // MenuItems
+    //
     MenuItem howtoplay = new MenuItem("How to play");
     howtoplay.setOnAction(e -> {
       TextField howtoplaytext = new TextField("this should display how to play eventually");
       howtoplaytext.setEditable(false);
     });
 
+    MenuItem ogtheme = new MenuItem("Original Theme");
+    ogtheme.setOnAction(e -> {
+      // this.game = ThemeOneScene();
+      OriginalTheme();
+    });
+
+    MenuItem ThemeOne = new MenuItem("Theme One");
+    ThemeOne.setOnAction(e -> {
+      // this.game = ThemeOneScene();
+      ThemeOneScene();
+    });
+
+    MenuItem ThemeTwo = new MenuItem("Theme Two");
+    ThemeTwo.setOnAction(e -> {
+      // this.game = ThemeOneScene();
+      ThemeTwoScene();
+    });
+    //
+    //*************************
+    //
+
+    //
+    // adding MenuItems to Menu
+    //
     gameplay.getItems().add(howtoplay);
+    
+    themes.getItems().add(ogtheme);
+    themes.getItems().add(ThemeOne);
+    themes.getItems().add(ThemeTwo);
+
+    //
+    //*************************
+    //
 
     settings.getMenus().addAll(options, gameplay, themes);
 
-    HBox topsettings = new HBox(20, settings);
-
-    root.setCenter(gameboard);
-    root.setTop(topsettings);
+    OriginalTheme();
 
     return new Scene(root, 3000, 3000);
 
   }
 
-
-  // returns gameLogic ????
+  
   //
-  public GameLogic getGameLogic(){
-    return gameLogic;
+  // OriginalTheme
+  //
+  // Orignal theme attributes
+  //
+  private void OriginalTheme(){
+
+    HBox topsettings = new HBox(20, settings);
+
+    root.setCenter(gameboard);
+    root.setTop(topsettings);
   }
 
+  private void clearroot(){
+    root.setCenter(null);
+    root.setLeft(null);
+    root.setRight(null);
+    root.setTop(null);
+    root.setBottom(null);
+  }
 
   //
   // themeOne
   // 
   // creates themeone
   //
-  public Scene ThemeOne(){
+  private void ThemeOneScene(){
 
-    return null; 
+    VBox settingsThemeOne = new VBox(20, settings);
+
+    clearroot();
+    root.setCenter(gameboard);
+    root.setLeft(settingsThemeOne);
+
   }
 
   //
@@ -117,8 +166,13 @@ public class JavaFXTemplate extends Application {
   //
   // creates themeTwo
   //
-  public Scene themeTwo(){
-    return null;
+  private void ThemeTwoScene(){
+
+    VBox settingsThemeTwo = new VBox(20, settings);
+
+    clearroot();
+    root.setCenter(gameboard);
+    root.setLeft(settingsThemeTwo);
   }
 
 
