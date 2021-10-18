@@ -3,6 +3,9 @@ import javafx.geometry.Pos;
 import javafx.scene.layout.GridPane;
 
 public class GameLogic{
+
+  private GameData gamedata; 
+  private GameButton pieces;
   
 
   public GridPane creategameboard(){
@@ -16,13 +19,19 @@ public class GameLogic{
     for (int x = 0; x < 7; x++) {
       for (int i = 0; i < 6; i++) {
 
-        GameButton b1 = new GameButton();
-        gameboard.add(b1, x, i);
-        b1.setOnAction(JavaFXTemplate.disable());
+        pieces = new GameButton();
+        pieces.setXcord(x);
+        pieces.setYcord(i);
+        gameboard.add(pieces, x, i);
+        pieces.setOnAction(JavaFXTemplate.disable());
       }
     }
 
     return gameboard;
+  }
+
+  public void hasWon(){
+
   }
 
 }

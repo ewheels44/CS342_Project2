@@ -138,7 +138,7 @@ public class JavaFXTemplate extends Application {
     root.setTop(topsettings);
   }
 
-  private void clearroot(){
+  private void clearRoot(){
     root.setCenter(null);
     root.setLeft(null);
     root.setRight(null);
@@ -155,7 +155,7 @@ public class JavaFXTemplate extends Application {
 
     VBox settingsThemeOne = new VBox(20, settings);
 
-    clearroot();
+    clearRoot();
     root.setCenter(gameboard);
     root.setLeft(settingsThemeOne);
 
@@ -170,9 +170,9 @@ public class JavaFXTemplate extends Application {
 
     VBox settingsThemeTwo = new VBox(20, settings);
 
-    clearroot();
+    clearRoot();
     root.setCenter(gameboard);
-    root.setLeft(settingsThemeTwo);
+    root.setRight(settingsThemeTwo);
   }
 
 
