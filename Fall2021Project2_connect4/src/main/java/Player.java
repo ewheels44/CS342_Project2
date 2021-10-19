@@ -5,6 +5,7 @@ public class Player{
 
   private String color;
   private int playerNumber;
+  private boolean hasGone = false;
 
   public int getTurn(){
     return 0;
@@ -25,6 +26,14 @@ public class Player{
 
   public int getPlayerNumber(){
     return this.playerNumber;
+  }
+
+  public boolean getHasGone(){
+    return this.hasGone;
+  }
+
+  public void setTurn(boolean _state){
+    this.hasGone = _state;
   }
 
 }

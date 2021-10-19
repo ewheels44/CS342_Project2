@@ -13,17 +13,20 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.scene.control.ListView;
 import javafx.scene.layout.VBox;
 
 public class JavaFXTemplate extends Application {
 
-  private GameLogic gameLogic;
+  private static GameLogic gameLogic;
   private GridPane gameboard;
 
   private BorderPane root;
   private MenuBar settings;
   private Scene game;
   
+  private static ListView<String> whosmove;
+  private static TextField turndisplay;
 
   private EventHandler<ActionEvent> reset;
   private static EventHandler<ActionEvent> disableButton;
@@ -41,7 +44,13 @@ public class JavaFXTemplate extends Application {
       public void handle(ActionEvent event) {
         // TODO Auto-generated method stub
         GameButton b1 = (GameButton) event.getSource();
+        gameLogic.DropPiece(b1, b1.getYcord());
         b1.setDisable(true);
+        String turn = gameLogic.whosTurn();
+        b1.setText(turn);
+        whosmove.getItems().add(turn);
+        gameLogic.placePiece(b1);
+        turndisplay.setText(gameLogic.nextTurn());
       }
     };
 
@@ -116,6 +125,13 @@ public class JavaFXTemplate extends Application {
     //*************************
     //
 
+    whosmove = new ListView<String>();
+    whosmove.getItems().add("NEW GAME!");
+
+    turndisplay = new TextField(gameLogic.nextTurn());
+    turndisplay.setEditable(false);
+
+
     settings.getMenus().addAll(options, gameplay, themes);
 
     OriginalTheme();
@@ -133,7 +149,12 @@ public class JavaFXTemplate extends Application {
   private void OriginalTheme(){
 
     HBox topsettings = new HBox(20, settings);
+    VBox whosmoveDataBox = new VBox(20, whosmove);
+    HBox playersturn = new HBox(20, turndisplay);
 
+
+    root.setLeft(playersturn);
+    root.setBottom(whosmoveDataBox);
     root.setCenter(gameboard);
     root.setTop(topsettings);
   }
