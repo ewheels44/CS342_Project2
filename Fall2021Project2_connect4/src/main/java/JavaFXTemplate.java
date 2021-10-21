@@ -14,54 +14,38 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
+import java.util.HashMap;
 
 public class JavaFXTemplate extends Application {
 
   private static GameLogic gameLogic;
+  private static GameData gameData;
   private GridPane gameboard;
 
   private BorderPane root;
   private MenuBar settings;
-  private Scene game;
   
   private static ListView<String> whosmove;
   private static TextField turndisplay;
 
+  private static HashMap<String, Scene> sceneMap;
+
   private EventHandler<ActionEvent> reset;
-  private static EventHandler<ActionEvent> disableButton;
   private EventHandler<ActionEvent> dispScene;
   private EventHandler<ActionEvent> changeTheme;
-
-
-  //
-  // this is a test
-  // 
-  public static EventHandler<ActionEvent> disable(){
-    disableButton = new EventHandler<ActionEvent>(){
-
-      @Override
-      public void handle(ActionEvent event) {
-        // TODO Auto-generated method stub
-        GameButton b1 = (GameButton) event.getSource();
-        gameLogic.DropPiece(b1, b1.getYcord());
-        b1.setDisable(true);
-        String turn = gameLogic.whosTurn();
-        b1.setText(turn);
-        whosmove.getItems().add(turn);
-        gameLogic.placePiece(b1);
-        turndisplay.setText(gameLogic.nextTurn());
-      }
-    };
-
-    return disableButton;
-  }
 
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		launch(args);
 	}
+
+  public static void addturnDisp(String _turn){
+    whosmove.getItems().add(_turn);
+    turndisplay.setText(gameLogic.nextTurn());
+  }
 
 
   //
@@ -70,11 +54,11 @@ public class JavaFXTemplate extends Application {
   // creates everything so settings, gameboard and logic 
   // can be reused
   //
-  public Scene createGameScene(){
+  public Scene createGameScene(Stage _pirmarystage){
     root = new BorderPane();
     
     gameLogic = new GameLogic();
-    gameboard = gameLogic.creategameboard();
+    gameboard = gameLogic.creategameboard(_pirmarystage);
 
     settings = new MenuBar(); 
 
@@ -203,14 +187,36 @@ public class JavaFXTemplate extends Application {
 		// TODO Auto-generated method stub
 
 		primaryStage.setTitle("Welcome to Connect Four!");
-		
-		
-    this.game = createGameScene();
-    primaryStage.setScene(game);
+
+		sceneMap = new HashMap<String,Scene>();
+    // this.game = createGameScene();
+    // primaryStage.setScene(game);
+    // primaryStage.show();
+
+    // sceneMap.put("Start screen", createstartScreen());
+    sceneMap.put("Game screen", createGameScene(primaryStage));
+    sceneMap.put("Winner screen", winnerWinnerChickenDinner());
+
+
+    // primaryStage.setScene(sceneMap.get("Start Screen"));
+    primaryStage.setScene(sceneMap.get("Game screen"));
     primaryStage.show();
+
 		// Scene scene = new Scene(new VBox(), 700,700);
 		// primaryStage.setScene(scene);
 		// primaryStage.show();
 	}
+
+  //
+  // SCENES BELONG HERE
+  //
+  public static Scene winnerWinnerChickenDinner(){
+    BorderPane winnerroot = new BorderPane();
+    Button playagain = new Button("Play again");
+
+    winnerroot.setCenter(playagain);
+
+    return new Scene(winnerroot, 3000, 3000);
+  }
 
 }

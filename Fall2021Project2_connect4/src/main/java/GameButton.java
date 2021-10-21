@@ -4,11 +4,13 @@ public class GameButton extends Button{
 
   private int UpDown;
   private int diagonalRandL;
-  private int leftRigth;
+  private int leftRight;
   private int diagonalLandR;
 
   private int Xcord = 0;
   private int Ycord = 0;
+
+  private String pieceColor;
 
   private boolean isValid = true;
 
@@ -33,12 +35,62 @@ public class GameButton extends Button{
     return this.Ycord;
   }
 
-  public boolean getisValid(GameButton _piece){
-    return _piece.isValid;
+  public boolean getisValid(){
+    return this.isValid;
   }
 
-  public void setisValid(GameButton _piece, boolean _x){
-    _piece.isValid = _x; 
+  public void setisValid(boolean _x){
+    this.isValid = _x; 
   }
+
+  public void setPieceColor(String _color){
+    this.pieceColor = _color;
+  }
+
+  public String getPieceColor(){
+    return this.pieceColor;
+  }
+
+public int getUpDown() {
+	return UpDown;
+}
+
+public void setUpDown(int upDown) {
+	UpDown = upDown;
+}
+
+public int getDiagonalRandL() {
+	return diagonalRandL;
+}
+
+public void setDiagonalRandL(int diagonalRandL) {
+	this.diagonalRandL = diagonalRandL;
+}
+
+public int getLeftRigth() {
+	return leftRight;
+}
+
+public void setLeftRigth(int _leftRight) {
+	this.leftRight = _leftRight;
+}
+
+public int getDiagonalLandR() {
+	return diagonalLandR;
+}
+
+public void setDiagonalLandR(int diagonalLandR) {
+	this.diagonalLandR = diagonalLandR;
+}
+
+public boolean isValid() {
+	return isValid;
+}
+
+public void setValid(boolean isValid) {
+	this.isValid = isValid;
+}
+
+
 
 }
