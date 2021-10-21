@@ -8,10 +8,12 @@ public class GameData extends GameLogic {
 
   private boolean wonGame;
 
+
   GameData() {
     player1 = new Player();
     player1.setColor("B");
     player1.setPlayerNuber(1);
+
 
     player2 = new Player();
     player2.setColor("R");
@@ -23,7 +25,8 @@ public class GameData extends GameLogic {
   // else return player2;
   // }
 
-  public boolean isWonGame() {
+
+public boolean isWonGame() {
     return wonGame;
   }
 

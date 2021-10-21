@@ -32,7 +32,7 @@ public class JavaFXTemplate extends Application {
 
   private static HashMap<String, Scene> sceneMap;
 
-  private EventHandler<ActionEvent> reset;
+  private static EventHandler<ActionEvent> reset;
   private EventHandler<ActionEvent> dispScene;
   private EventHandler<ActionEvent> changeTheme;
 
@@ -188,6 +188,16 @@ public class JavaFXTemplate extends Application {
 
 		primaryStage.setTitle("Welcome to Connect Four!");
 
+    reset = new EventHandler<ActionEvent>(){
+      @Override
+      public void handle(ActionEvent event) {
+        Scene game = createGameScene(primaryStage);
+        primaryStage.setScene(game);
+        primaryStage.show();
+      }
+
+    };
+
 		sceneMap = new HashMap<String,Scene>();
     // this.game = createGameScene();
     // primaryStage.setScene(game);
@@ -212,9 +222,16 @@ public class JavaFXTemplate extends Application {
   //
   public static Scene winnerWinnerChickenDinner(){
     BorderPane winnerroot = new BorderPane();
+    TextField playerWon = new TextField(gameLogic.getPlayerWon());
+    playerWon.setEditable(false);
+
+
+
     Button playagain = new Button("Play again");
+    playagain.setOnAction(reset); 
 
     winnerroot.setCenter(playagain);
+    winnerroot.setBottom(playerWon);
 
     return new Scene(winnerroot, 3000, 3000);
   }

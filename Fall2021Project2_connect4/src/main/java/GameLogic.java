@@ -18,7 +18,9 @@ public class GameLogic {
   
   private EventHandler<ActionEvent> disableButton;
 
-  public GridPane creategameboard(Stage _pirmarystage){
+  private String playerWon;
+
+  public GridPane creategameboard(Stage _primarystage){
     gameboard = new GridPane();
     gameboard.setAlignment(Pos.CENTER);
     gameboard.setHgap(10);
@@ -32,7 +34,7 @@ public class GameLogic {
 
         pieces = new GameButton();
         pieces.addXandYcords(pieces, i, j);
-        pieces.setOnAction(disableButton(_pirmarystage));
+        pieces.setOnAction(disableButton(_primarystage));
 
         // gameboard doesnt abide by the rules of rows and colums apparently
         //
@@ -48,7 +50,7 @@ public class GameLogic {
     return gameboard;
   }
 
-  public EventHandler<ActionEvent> disableButton(Stage _pirmarystage){
+  public EventHandler<ActionEvent> disableButton(Stage _primarystage){
     disableButton = new EventHandler<ActionEvent>(){
       @Override
       public void handle(ActionEvent event) {
@@ -65,8 +67,9 @@ public class GameLogic {
         JavaFXTemplate.addturnDisp(turn);
 
         placePiece(b1);
+        
         if(gamedata.isWonGame()){
-          _pirmarystage.setScene(JavaFXTemplate.winnerWinnerChickenDinner()); 
+          _primarystage.setScene(JavaFXTemplate.winnerWinnerChickenDinner()); 
         }
       }
     };
@@ -74,43 +77,6 @@ public class GameLogic {
     return disableButton;
   }
 
-    //
-    // this is a test
-    // 
-//     public EventHandler<ActionEvent> disableButton(){
-//       @Override
-//       public void handle(ActionEvent event) {
-//         // TODO Auto-generated method stub
-//         GameButton b1 = (GameButton) event.getSource();
-//         b1 = gameLogic.DropPiece(b1, b1.getXcord(), b1.getYcord());
-//         b1.setDisable(true);
-//         b1.setisValid(false);
-// 
-//         String turn = gameLogic.whosTurn();
-//         b1.setText(turn);
-//         b1.setPieceColor(turn);
-//         whosmove.getItems().add(turn);
-//         gameLogic.placePiece(b1);
-//         if(gameData.isWonGame()){
-//         }
-//         turndisplay.setText(gameLogic.nextTurn());
-//       }
-//     };
-
-//   public Node getPiece(int _X, int _Y){
-//     Node result = null;
-// 
-//     ObservableList<Node> pieces = gameboard.getChildren(); 
-// 
-//     for(Node node : pieces){
-//       if(gameboard.getRowIndex(node) == _X && gameboard.getColumnIndex(node) == _Y){
-//         result = node;
-//         return result;
-//       }
-//     }
-// 
-//     return null;
-//   }
 
   public GameButton getPiece(){
     return this.pieces;
@@ -196,11 +162,24 @@ public class GameLogic {
         
   }
 
+  public String getPlayerWon() {
+	return playerWon;
+}
+
+public void setPlayerWon(String playerWon) {
+	this.playerWon = playerWon;
+}
+
   public void hasWon(GameButton _piece){
     System.out.println("This is getLeftRigth: " + _piece.getLeftRigth());
     if(_piece.getLeftRigth() + 1 == 4){
       System.out.println("HAS WON!!!");
       gamedata.setWonGame(true);
+
+      String colorWon = _piece.getPieceColor();
+      gamedata.setPlayerWon(colorWon);
+
+      setPlayerWon(colorWon);
     }
     
   }
