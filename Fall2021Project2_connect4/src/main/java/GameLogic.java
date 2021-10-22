@@ -4,6 +4,11 @@ import javafx.scene.layout.GridPane;
 import javafx.event.EventHandler;
 import javafx.event.ActionEvent;
 import javafx.stage.Stage;
+import java.util.ArrayList;
+import java.lang.String;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.ListIterator;
 
 public class GameLogic {
 
@@ -97,6 +102,7 @@ public class GameLogic {
     System.out.println(_piece.getYcord());
     
     hasNeighborSameColor(_piece);
+    gamedata.incTotalpices();
   }
 
   
@@ -117,52 +123,112 @@ public class GameLogic {
 
   }
 
+
+  private boolean iswonleftright(GameButton _piece, String _winningcombo){
+
+    String columpattern = "";
+
+    for(int i = 0; i < GameBoardCOL; i++){
+      if(piceseslocation[_piece.getXcord()][i].getPieceColor() != null){
+        columpattern = columpattern.concat(piceseslocation[_piece.getXcord()][i].getPieceColor());
+      }
+    }
+
+    return Pattern.compile(_winningcombo).matcher(columpattern).matches();
+  }
+
+  private boolean iswonUPDown(GameButton _piece, String _winningcombo){
+    
+    String columpattern = "";
+
+    for(int i = 0; i < GameBoardROW; i++){
+      if(piceseslocation[i][_piece.getYcord()].getPieceColor() != null){
+        columpattern = columpattern.concat(piceseslocation[i][_piece.getYcord()].getPieceColor());
+      }
+    }
+
+    return Pattern.compile(_winningcombo).matcher(columpattern).matches();
+  }
+
+  private boolean iswonDiagonalRandL(GameButton _piece, String _winningcombo){
+    
+    String columpattern = "";
+
+    int startX = GameBoardROW - 1;
+    // int startY = _piece.getYcord() - (_piece.getYcord() - 1);
+    // if(startY <= 1) startY = 0;
+    int startY = 0;
+
+    // System.out.println("this is starty: " + startY);
+
+    for (int j = startY; j < GameBoardCOL; j++) {
+      if(piceseslocation[startX][j].getPieceColor() != null){
+        columpattern = columpattern.concat(piceseslocation[startX--][j].getPieceColor());
+      }
+
+      // System.out.println("Start should decriment: " + startX);
+      // System.out.println("j should decriment: " + j);
+    }
+
+    // System.out.println("This is columpattern: " + columpattern);
+
+    return Pattern.compile(_winningcombo).matcher(columpattern).matches();
+  }
+
+  private boolean iswonDiagonalLandR(GameButton _piece, String _winningcombo){
+
+    String columpattern = "";
+
+    int startX = GameBoardROW - 1;
+    int startY = GameBoardCOL - 1;
+
+    System.out.println("this is starty: " + startY);
+
+    for (int j = startY; j > 0 ; j--) {
+      if(piceseslocation[startX][j].getPieceColor() != null){
+        columpattern = columpattern.concat(piceseslocation[startX--][j].getPieceColor());
+      }
+
+      // System.out.println("Start should decriment: " + startX);
+      // System.out.println("j should decriment: " + j);
+    }
+
+    // System.out.println("This is columpattern: " + columpattern);
+
+    return Pattern.compile(_winningcombo).matcher(columpattern).matches();
+      
+  }
+
   public void hasNeighborSameColor(GameButton _piece){
-    gamedata.incTotalpices();
 
-    int X = _piece.getXcord();
-    int Y = _piece.getYcord();
-
-    GameButton PieceBelow = null;
-    GameButton PieceLeft = null;
-    GameButton PieceRight = null;
-
-    GameButton PieceDiagonalRandL = null;
-    GameButton PieceDiagonalLandR = null;
-
-//     // left most
-//     if(Y == 0){
-//       PieceRight = getPiece(X, Y+1);
-//       PieceDiagonalRandL = getPiece(X-1, Y+1);
-//     }
+//     Pattern winningCombo = Pattern.compile(".s");
 // 
-//     // bottom
-//     if(X == 5){
-//       PieceRight = getPiece(X, Y+1);
-//       PieceLeft =  getPiece(X, Y-1);
-//       PieceDiagonalRandL = getPiece(X-1, Y+1);
-//       PieceDiagonalLandR = getPiece(X-1, Y-1);
-//     }
-// 
-//     // rigth most
-//     if(Y == 6){
-//       PieceLeft =  getPiece(X, Y-1);
-//       PieceDiagonalLandR = getPiece(X-1, Y-1);
-//     }
+    // boolean b1 = Pattern.compile("(.*BBBB.*)|(.*RRRR*.)").matcher("BBRBBBB").matches();
+    // System.out.println(b1);
+
+    // String winningCombo = "(BBBB)|(RRRR)";
+    // String winningCombo = "(B{4,}+)||(R{4,}+)";
+    final String regex = "(.*BBBB.*)|(.*RRRR*.)";
     
-    PieceRight = getPieceXandY(X, Y+1);
-    PieceDiagonalRandL = getPieceXandY(X-1, Y+1);
-    
-    if(PieceRight.getPieceColor() == _piece.getPieceColor()){
-      int leftandrightcount = PieceRight.getLeftRigth();
-      _piece.setLeftRigth(leftandrightcount+=1); 
+    if(iswonleftright(_piece, regex)){
       hasWon(_piece);
     }
 
-        
+    if(iswonUPDown(_piece, regex)){
+      hasWon(_piece);
+    }
+
+    if(iswonDiagonalRandL(_piece, regex)){
+      hasWon(_piece);
+    }
+
+    if(iswonDiagonalLandR(_piece, regex)){
+      hasWon(_piece);
+    }
+
   }
 
-  public String getPlayerWon() {
+public String getPlayerWon() {
 	return playerWon;
 }
 
@@ -171,16 +237,14 @@ public void setPlayerWon(String playerWon) {
 }
 
   public void hasWon(GameButton _piece){
-    System.out.println("This is getLeftRigth: " + _piece.getLeftRigth());
-    if(_piece.getLeftRigth() + 1 == 4){
-      System.out.println("HAS WON!!!");
-      gamedata.setWonGame(true);
 
-      String colorWon = _piece.getPieceColor();
-      gamedata.setPlayerWon(colorWon);
+    System.out.println("HAS WON!!!");
+    gamedata.setWonGame(true);
 
-      setPlayerWon(colorWon);
-    }
+    String colorWon = _piece.getPieceColor();
+    gamedata.setPlayerWon(colorWon);
+
+    setPlayerWon(colorWon);
     
   }
 
