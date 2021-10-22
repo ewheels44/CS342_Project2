@@ -71,13 +71,8 @@ public class GameLogic {
 
 //        b1.setText(turn);
         b1.setPieceColor(turn);
-
-
-
         JavaFXTemplate.addturnDisp(turn);
 
-
-        
         if(gamedata.isWonGame()){
           _primarystage.setScene(JavaFXTemplate.winnerWinnerChickenDinner()); 
         }
