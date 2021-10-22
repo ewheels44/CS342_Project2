@@ -1,3 +1,4 @@
+import java.util.Stack;
 
 public class GameData extends GameLogic {
 
@@ -5,6 +6,8 @@ public class GameData extends GameLogic {
 
   private Player player1;
   private Player player2;
+
+  private Stack<GameButton> PlayerStack;
 
   private boolean wonGame;
 
@@ -18,12 +21,22 @@ public class GameData extends GameLogic {
     player2 = new Player();
     player2.setColor("R");
     player2.setPlayerNuber(2);
+
+    PlayerStack = new Stack<>();
   }
 
   // public Player getPlayerInfo(int playerNumber){
   // if(playerNumber == 1) return player1;
   // else return player2;
   // }
+
+  public void addplayer(GameButton _piece){
+    PlayerStack.push(_piece);
+  }
+
+  public GameButton popPlayer(){
+    return PlayerStack.pop();
+  }
 
 
 public boolean isWonGame() {
@@ -40,6 +53,10 @@ public boolean isWonGame() {
 
   public void incTotalpices() {
     this.totalpices++;
+  }
+
+  public void decTotalpieces(){
+    this.totalpices--;
   }
 
   public String getWhosTurn() {

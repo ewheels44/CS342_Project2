@@ -108,6 +108,29 @@ public class GameLogic {
     
     hasNeighborSameColor(_piece);
     gamedata.incTotalpices();
+    
+    gamedata.addplayer(_piece);
+  }
+
+  public int getTotalPieces(){
+    return gamedata.getTotalPieces();
+  }
+
+  public void reversemove(){
+    GameButton lastmove = gamedata.popPlayer();
+
+    gamedata.decTotalpieces();
+
+    int lastmoveX = lastmove.getXcord();
+    int lastmoveY = lastmove.getYcord();
+
+    GameButton newGameButton = new GameButton();
+    gameboard.add(newGameButton, lastmoveY, lastmoveX);
+
+    piceseslocation[lastmoveX][lastmoveY] = newGameButton;
+
+    JavaFXTemplate.removelast();
+
   }
 
   

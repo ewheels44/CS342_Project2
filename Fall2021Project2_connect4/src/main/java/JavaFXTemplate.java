@@ -18,7 +18,6 @@ import java.util.HashMap;
 public class JavaFXTemplate extends Application {
 
   private static GameLogic gameLogic;
-  private static GameData gameData;
   private GridPane gameboard;
 
   private BorderPane root;
@@ -41,6 +40,12 @@ public class JavaFXTemplate extends Application {
 
   public static void addturnDisp(String _turn){
     whosmove.getItems().add(_turn);
+    turndisplay.setText(gameLogic.nextTurn());
+  }
+
+  public static void removelast(){
+    gameLogic.whosTurn();
+    whosmove.getItems().remove(gameLogic.getTotalPieces()+1); // offset the displayname
     turndisplay.setText(gameLogic.nextTurn());
   }
 
@@ -73,10 +78,12 @@ public class JavaFXTemplate extends Application {
     });
 
     MenuItem new_game = new MenuItem("New Game");
-    new_game.setOnAction(e -> {
-      //TODO Restart the game
-    });
+    // new_game.setOnAction(e -> {
+    //   //TODO Restart the game
+    // });
+    new_game.setOnAction(reset);
 
+    // TODO Maybe make it a function??
     // TODO Pop up window, I can clean this up to make it look pretty later ( add a class? )
     MenuItem howtoplay = new MenuItem("How to play");
     howtoplay.setOnAction(e -> {
@@ -132,6 +139,11 @@ public class JavaFXTemplate extends Application {
     MenuItem reverse_mv = new MenuItem("reverse");
     reverse_mv.setOnAction(e -> {
       // reverse the player move to n times user clickes reverse
+      // gameLogic.
+      if(gameLogic.getTotalPieces() > 0){
+        gameLogic.reversemove();
+      }
+
     });
 
     //
