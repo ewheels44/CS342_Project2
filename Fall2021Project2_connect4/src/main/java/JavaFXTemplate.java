@@ -77,7 +77,7 @@ public class JavaFXTemplate extends Application {
       //TODO Restart the game
     });
 
-
+    // TODO Pop up window, I can clean this up to make it look pretty later ( add a class? )
     MenuItem howtoplay = new MenuItem("How to play");
     howtoplay.setOnAction(e -> {
       TextField howtoplaytext = new TextField("this should display how to play eventually");
@@ -109,6 +109,7 @@ public class JavaFXTemplate extends Application {
 
     });
 
+    // theme menu
     MenuItem ogtheme = new MenuItem("Original Theme");
     ogtheme.setOnAction(e -> {
       // this.game = ThemeOneScene();
@@ -144,7 +145,7 @@ public class JavaFXTemplate extends Application {
     options.getItems().add(howtoplay);
     options.getItems().add(new_game);
     options.getItems().add(close_app);
-
+    
     gameplay.getItems().add(reverse_mv);
 
     themes.getItems().add(ogtheme);

@@ -61,7 +61,7 @@ public class GameLogic {
         b1.setisValid(false);
 
         String turn = whosTurn();
-        // P1 == B | P2 == R
+        // P1 == B | P2 == R, just set the whole box to a color
         if ( turn == "B") {
           b1.setStyle ("-fx-background-color: #0000f5;");
         }
@@ -72,7 +72,7 @@ public class GameLogic {
 //        b1.setText(turn);
         b1.setPieceColor(turn);
         JavaFXTemplate.addturnDisp(turn);
-
+        placePiece(b1);
         if(gamedata.isWonGame()){
           _primarystage.setScene(JavaFXTemplate.winnerWinnerChickenDinner()); 
         }
