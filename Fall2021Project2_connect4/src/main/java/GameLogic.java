@@ -28,9 +28,9 @@ public class GameLogic {
   public GridPane creategameboard(Stage _primarystage){
     gameboard = new GridPane();
     gameboard.setAlignment(Pos.CENTER);
-    gameboard.setHgap(10);
-    gameboard.setVgap(10);
-    gameboard.setStyle("-fx-font-size: 100;" + "-fx-boarder-size: 100;");
+    gameboard.setHgap(5);
+    gameboard.setVgap(5);
+    gameboard.setStyle("-fx-font-size: 50;" + "-fx-boarder-size: 50;");
 
     piceseslocation = new GameButton[GameBoardROW][GameBoardCOL]; 
 
@@ -42,8 +42,8 @@ public class GameLogic {
         pieces.setOnAction(disableButton(_primarystage));
 
         // gameboard doesnt abide by the rules of rows and colums apparently
-        //
-        gameboard.add(pieces, j, i);        
+        // ^ .add takes col first then row
+        gameboard.add(pieces, j, i);
 
 
         piceseslocation[i][j] = pieces;
@@ -66,13 +66,18 @@ public class GameLogic {
         b1.setisValid(false);
 
         String turn = whosTurn();
-        b1.setText(turn);
+        // P1 == B | P2 == R, just set the whole box to a color
+        if ( turn == "B") {
+          b1.setStyle ("-fx-background-color: #0000f5;");
+        }
+        else {
+          b1.setStyle ("-fx-background-color: #ff0000;");
+        }
+
+//        b1.setText(turn);
         b1.setPieceColor(turn);
-
         JavaFXTemplate.addturnDisp(turn);
-
         placePiece(b1);
-        
         if(gamedata.isWonGame()){
           _primarystage.setScene(JavaFXTemplate.winnerWinnerChickenDinner()); 
         }

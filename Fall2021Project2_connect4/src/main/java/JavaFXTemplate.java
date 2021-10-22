@@ -1,20 +1,17 @@
 import javafx.application.Application;
 
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.BorderPane;
 import javafx.event.EventHandler;
 import javafx.event.ActionEvent;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.Menu; 
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
-import javafx.scene.control.ListView;
-import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import java.util.HashMap;
 
@@ -69,12 +66,50 @@ public class JavaFXTemplate extends Application {
     //
     // MenuItems
     //
+    // Options Menu
+    MenuItem close_app = new MenuItem("exit");
+    close_app.setOnAction(e -> {
+      System.exit(0);
+    });
+
+    MenuItem new_game = new MenuItem("New Game");
+    new_game.setOnAction(e -> {
+      //TODO Restart the game
+    });
+
+    // TODO Pop up window, I can clean this up to make it look pretty later ( add a class? )
     MenuItem howtoplay = new MenuItem("How to play");
     howtoplay.setOnAction(e -> {
       TextField howtoplaytext = new TextField("this should display how to play eventually");
       howtoplaytext.setEditable(false);
+      Stage pop_up = new Stage();
+      pop_up.initModality(Modality.APPLICATION_MODAL);
+      pop_up.setTitle("How to play");
+      pop_up.setMinWidth(500);
+      pop_up.setMinHeight(250);
+      pop_up.setResizable(false);
+
+      Label m_label = new Label();
+      m_label.setText("Simply try to match four same color boxes in the same direction\nhorizontally, vertically or diagonally.");
+      m_label.setStyle("-fx-font-size:14");
+      m_label.setAlignment(Pos.CENTER);
+      Button close_btn = new Button("ok");
+      close_btn.setStyle("-fx-font-size:14");
+      close_btn.setOnAction(f -> {
+        pop_up.close();
+      });
+
+      VBox spot_close_btn = new VBox(10);
+      spot_close_btn.getChildren().addAll(m_label, close_btn);
+      spot_close_btn.setAlignment(Pos.CENTER);
+
+      Scene pop_scene = new Scene(spot_close_btn);
+      pop_up.setScene(pop_scene);
+      pop_up.show();
+
     });
 
+    // theme menu
     MenuItem ogtheme = new MenuItem("Original Theme");
     ogtheme.setOnAction(e -> {
       // this.game = ThemeOneScene();
@@ -92,6 +127,13 @@ public class JavaFXTemplate extends Application {
       // this.game = ThemeOneScene();
       ThemeTwoScene();
     });
+
+    // Gameplay menu
+    MenuItem reverse_mv = new MenuItem("reverse");
+    reverse_mv.setOnAction(e -> {
+      // reverse the player move to n times user clickes reverse
+    });
+
     //
     //*************************
     //
@@ -99,8 +141,13 @@ public class JavaFXTemplate extends Application {
     //
     // adding MenuItems to Menu
     //
-    gameplay.getItems().add(howtoplay);
+
+    options.getItems().add(howtoplay);
+    options.getItems().add(new_game);
+    options.getItems().add(close_app);
     
+    gameplay.getItems().add(reverse_mv);
+
     themes.getItems().add(ogtheme);
     themes.getItems().add(ThemeOne);
     themes.getItems().add(ThemeTwo);
@@ -120,7 +167,7 @@ public class JavaFXTemplate extends Application {
 
     OriginalTheme();
 
-    return new Scene(root, 3000, 3000);
+    return new Scene(root, 1920, 980);
 
   }
 
@@ -233,7 +280,7 @@ public class JavaFXTemplate extends Application {
     winnerroot.setCenter(playagain);
     winnerroot.setBottom(playerWon);
 
-    return new Scene(winnerroot, 3000, 3000);
+    return new Scene(winnerroot, 1920, 980);
   }
 
 }
