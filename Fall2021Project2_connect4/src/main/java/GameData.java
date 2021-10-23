@@ -7,7 +7,7 @@ public class GameData extends GameLogic {
   private Player player1;
   private Player player2;
 
-  private Stack<GameButton> PlayerStack;
+  private Stack<GameButton> playerMoveStack;
 
   private boolean wonGame;
 
@@ -22,7 +22,7 @@ public class GameData extends GameLogic {
     player2.setColor("R");
     player2.setPlayerNuber(2);
 
-    PlayerStack = new Stack<>();
+    playerMoveStack = new Stack<>();
   }
 
   // public Player getPlayerInfo(int playerNumber){
@@ -30,12 +30,16 @@ public class GameData extends GameLogic {
   // else return player2;
   // }
 
-  public void addplayer(GameButton _piece){
-    PlayerStack.push(_piece);
+  public void addplayerMove(GameButton _piece){
+    playerMoveStack.push(_piece);
   }
 
-  public GameButton popPlayer(){
-    return PlayerStack.pop();
+  public GameButton popPlayerMove(){
+    return playerMoveStack.pop();
+  }
+
+  public void TESTprintplayermovestack(){
+    // playerMoveStack.forEach(e -> System.out.println("this is the stack " + e.getPieceColor()));
   }
 
 

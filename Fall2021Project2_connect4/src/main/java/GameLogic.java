@@ -4,11 +4,11 @@ import javafx.scene.layout.GridPane;
 import javafx.event.EventHandler;
 import javafx.event.ActionEvent;
 import javafx.stage.Stage;
-import java.util.ArrayList;
+import javafx.util.Duration;
+
 import java.lang.String;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.ListIterator;
+import javafx.animation.PauseTransition;
 
 public class GameLogic {
 
@@ -22,6 +22,7 @@ public class GameLogic {
   private GameButton piceseslocation[][];
   
   private EventHandler<ActionEvent> disableButton;
+  private PauseTransition pause = new PauseTransition(Duration.seconds(5));
 
   private String playerWon;
 
@@ -76,10 +77,12 @@ public class GameLogic {
 
 //        b1.setText(turn);
         b1.setPieceColor(turn);
-        JavaFXTemplate.addturnDisp(turn);
+        JavaFXTemplate.addturnDisp(turn, b1);
         placePiece(b1);
         if(gamedata.isWonGame()){
-          _primarystage.setScene(JavaFXTemplate.winnerWinnerChickenDinner()); 
+          // _primarystage.setScene(JavaFXTemplate.winnerWinnerChickenDinner()); 
+          pause.setOnFinished(e -> _primarystage.setScene(JavaFXTemplate.winnerWinnerChickenDinner()));
+          pause.play();
         }
       }
     };
@@ -109,7 +112,8 @@ public class GameLogic {
     hasNeighborSameColor(_piece);
     gamedata.incTotalpices();
     
-    gamedata.addplayer(_piece);
+    gamedata.addplayerMove(_piece);
+    // gamedata.TESTprintplayermovestack();
   }
 
   public int getTotalPieces(){
@@ -117,14 +121,20 @@ public class GameLogic {
   }
 
   public void reversemove(){
-    GameButton lastmove = gamedata.popPlayer();
+    GameButton lastmove = gamedata.popPlayerMove();
+
+    // gamedata.TESTprintplayermovestack();
 
     gamedata.decTotalpieces();
 
     int lastmoveX = lastmove.getXcord();
     int lastmoveY = lastmove.getYcord();
 
+    GameButton removeME = piceseslocation[lastmoveX][lastmoveY];
+    gameboard.getChildren().remove(removeME);
+
     GameButton newGameButton = new GameButton();
+    newGameButton.addXandYcords(newGameButton, lastmoveX, lastmoveY);
     gameboard.add(newGameButton, lastmoveY, lastmoveX);
 
     piceseslocation[lastmoveX][lastmoveY] = newGameButton;
@@ -156,7 +166,7 @@ public class GameLogic {
 
     String columpattern = "";
 
-    for(int i = 0; i < GameBoardCOL; i++){
+    for(int i = 0; i < GameBoardCOL - 1; i++){
       if(piceseslocation[_piece.getXcord()][i].getPieceColor() != null){
         columpattern = columpattern.concat(piceseslocation[_piece.getXcord()][i].getPieceColor());
       }
@@ -239,19 +249,23 @@ public class GameLogic {
     final String regex = "(.*BBBB.*)|(.*RRRR*.)";
     
     if(iswonleftright(_piece, regex)){
-      hasWon(_piece);
+      int leftright = 0;
+      hasWon(_piece, leftright);
     }
 
     if(iswonUPDown(_piece, regex)){
-      hasWon(_piece);
+      int updwn = 1;
+      hasWon(_piece, updwn);
     }
 
     if(iswonDiagonalRandL(_piece, regex)){
-      hasWon(_piece);
+      int dRandL = 2;
+      hasWon(_piece, dRandL);
     }
 
     if(iswonDiagonalLandR(_piece, regex)){
-      hasWon(_piece);
+      int dLandR = 3;
+      hasWon(_piece, dLandR);
     }
 
   }
@@ -264,7 +278,7 @@ public void setPlayerWon(String playerWon) {
 	this.playerWon = playerWon;
 }
 
-  public void hasWon(GameButton _piece){
+  public void hasWon(GameButton _piece, int howplayerwon){
 
     System.out.println("HAS WON!!!");
     gamedata.setWonGame(true);
@@ -273,7 +287,73 @@ public void setPlayerWon(String playerWon) {
     gamedata.setPlayerWon(colorWon);
 
     setPlayerWon(colorWon);
-    
+
+    System.out.println("X cord has won!: " + _piece.getXcord());
+    System.out.println("Y cord has won!: " + _piece.getYcord());
+    GameButton winningPiece = _piece;
+    int winningpieceX = winningPiece.getXcord();
+    int winningpieceY = winningPiece.getYcord();
+
+    // left Right
+    if(howplayerwon == 0){
+      if(piceseslocation[winningpieceX][winningpieceY - 1].getPieceColor() == _piece.getPieceColor()){
+        for(int i = 0; i < 4; i++){
+          piceseslocation[winningpieceX][winningpieceY - i].setStyle("-fx-background-color: yellow;"); 
+        }
+      }
+      else{
+        for(int i = 0; i < 4; i++){
+          piceseslocation[winningpieceX][winningpieceY + i].setStyle("-fx-background-color: yellow;"); 
+        }
+      }
+    }
+
+    // Up Down
+    if(howplayerwon == 1){
+      if(piceseslocation[winningpieceX - 1][winningpieceY].getPieceColor() == _piece.getPieceColor()){
+        for(int i = 0; i < 4; i++){
+          piceseslocation[winningpieceX - i][winningpieceY].setStyle("-fx-background-color: yellow;"); 
+        }
+      }
+      else{
+        for(int i = 0; i < 4; i++){
+          piceseslocation[winningpieceX + i][winningpieceY].setStyle("-fx-background-color: yellow;"); 
+        }
+      }
+
+    }
+
+    // Diagonal Right Left
+    if(howplayerwon == 2){
+      if(piceseslocation[winningpieceX + 1][winningpieceY - 1].getPieceColor() == _piece.getPieceColor()){
+        for(int i = 0; i < 4; i++){
+          piceseslocation[winningpieceX++][winningpieceY - i].setStyle("-fx-background-color: yellow;"); 
+        }
+      }
+      else{
+        for(int i = 0; i < 4; i++){
+          piceseslocation[winningpieceX--][winningpieceY + i].setStyle("-fx-background-color: yellow;"); 
+        }
+      }
+
+    }
+
+    // Diagonal Left Right 
+    if(howplayerwon == 3){
+      if(piceseslocation[winningpieceX + 1][winningpieceY + 1].getPieceColor() == _piece.getPieceColor()){
+        for(int i = 0; i < 4; i++){
+          piceseslocation[winningpieceX++][winningpieceY + i].setStyle("-fx-background-color: yellow;"); 
+        }
+      }
+      else{
+        for(int i = 0; i < 4; i++){
+          piceseslocation[winningpieceX--][winningpieceY - i].setStyle("-fx-background-color: yellow;"); 
+        }
+      }
+
+    }
+
+
   }
 
   public String whosTurn(){

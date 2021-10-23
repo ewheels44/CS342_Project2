@@ -29,7 +29,7 @@ public class JavaFXTemplate extends Application {
   private static HashMap<String, Scene> sceneMap;
 
   private static EventHandler<ActionEvent> reset;
-  private EventHandler<ActionEvent> dispScene;
+  private EventHandler<ActionEvent> welcomeEvent;
   private EventHandler<ActionEvent> changeTheme;
 
 
@@ -38,15 +38,15 @@ public class JavaFXTemplate extends Application {
 		launch(args);
 	}
 
-  public static void addturnDisp(String _turn){
-    whosmove.getItems().add(_turn);
-    turndisplay.setText(gameLogic.nextTurn());
+  public static void addturnDisp(String _turn, GameButton _piece){
+    whosmove.getItems().add(_turn + " Player moved to (" + _piece.getXcord() + ", " + _piece.getYcord() + ")");
+    turndisplay.setText("It is " + gameLogic.nextTurn() + " Players turn");
   }
 
   public static void removelast(){
     gameLogic.whosTurn();
-    whosmove.getItems().remove(gameLogic.getTotalPieces()+1); // offset the displayname
-    turndisplay.setText(gameLogic.nextTurn());
+    whosmove.getItems().remove(gameLogic.getTotalPieces()+1); // +1 offset the displayname
+    turndisplay.setText("It is " + gameLogic.nextTurn() + " Players turn");
   }
 
 
@@ -97,7 +97,8 @@ public class JavaFXTemplate extends Application {
       pop_up.setResizable(false);
 
       Label m_label = new Label();
-      m_label.setText("Simply try to match four same color boxes in the same direction\nhorizontally, vertically or diagonally.");
+      m_label.setText("Simply try to match four same color boxes in the same direction\nhorizontally, vertically or diagonally. \n" +
+        "Blue (Player One) will always go first");
       m_label.setStyle("-fx-font-size:14");
       m_label.setAlignment(Pos.CENTER);
       Button close_btn = new Button("ok");
@@ -257,24 +258,48 @@ public class JavaFXTemplate extends Application {
 
     };
 
+    welcomeEvent = new EventHandler<ActionEvent>(){
+
+      @Override
+      public void handle(ActionEvent event) {
+        primaryStage.setScene(sceneMap.get("Game screen"));      
+      }
+  
+    };
+
 		sceneMap = new HashMap<String,Scene>();
     // this.game = createGameScene();
     // primaryStage.setScene(game);
     // primaryStage.show();
 
-    // sceneMap.put("Start screen", createstartScreen());
+    sceneMap.put("Start screen", createStartScreen());
     sceneMap.put("Game screen", createGameScene(primaryStage));
     sceneMap.put("Winner screen", winnerWinnerChickenDinner());
 
 
     // primaryStage.setScene(sceneMap.get("Start Screen"));
-    primaryStage.setScene(sceneMap.get("Game screen"));
+    primaryStage.setScene(sceneMap.get("Start screen"));
     primaryStage.show();
 
 		// Scene scene = new Scene(new VBox(), 700,700);
 		// primaryStage.setScene(scene);
 		// primaryStage.show();
 	}
+
+  private Scene createStartScreen(){
+    BorderPane welcomeRoot = new BorderPane(); 
+
+    TextField welcome = new TextField("WELCOME TO CONNECT 4");
+    welcome.setEditable(false);
+
+    Button readyPlayerOne = new Button("READY PLAYER ONE");
+    readyPlayerOne.setOnAction(welcomeEvent);
+
+    welcomeRoot.setCenter(welcome);
+    welcomeRoot.setBottom(readyPlayerOne);
+
+    return new Scene(welcomeRoot, 1920, 980);
+  }
 
   //
   // SCENES BELONG HERE
@@ -289,8 +314,12 @@ public class JavaFXTemplate extends Application {
     Button playagain = new Button("Play again");
     playagain.setOnAction(reset); 
 
+    Button exit = new Button("EXIT GAME");
+    exit.setOnAction(e -> System.exit(0));
+
     winnerroot.setCenter(playagain);
     winnerroot.setBottom(playerWon);
+    winnerroot.setLeft(exit);
 
     return new Scene(winnerroot, 1920, 980);
   }
