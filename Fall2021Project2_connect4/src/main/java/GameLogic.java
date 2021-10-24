@@ -208,7 +208,7 @@ public class GameLogic {
       // System.out.println("j should decriment: " + j);
     }
 
-    System.out.println("This is columpattern: " + columpattern);
+    // System.out.println("This is columpattern: " + columpattern);
 
     return Pattern.compile(_winningcombo).matcher(columpattern).matches();
   }
