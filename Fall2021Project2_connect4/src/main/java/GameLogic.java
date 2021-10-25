@@ -152,6 +152,7 @@ public class GameLogic {
 
     // going back to the old co ordinates
     GameButton newGameButton = new GameButton();
+//    newGameButton.setOnAction(disableButton(_primarystage));
     newGameButton.addXandYcords(newGameButton, lastmoveX, lastmoveY);
     gameboard.add(newGameButton, lastmoveY, lastmoveX);
 
@@ -183,8 +184,6 @@ public class GameLogic {
     // ArrayList<GameButton> colorsArray = new ArrayList<>();
     GameButton colorsArray[] = new GameButton[GameBoardCOL];
 
-    // this is just to commit
-    
     // looping through the column to find the same color pieces
     for(int i = 0; i < GameBoardCOL; i++){
       if(piceseslocation[_piece.getXcord()][i].getPieceColor() != null){
