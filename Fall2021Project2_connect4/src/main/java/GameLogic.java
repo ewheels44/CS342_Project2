@@ -217,7 +217,7 @@ public class GameLogic {
 
     String columpattern = "";
 
-    int startX = GameBoardROW - 1;
+    int startX = 0;
     int startY = GameBoardCOL - 1;
 
     System.out.println("this is starty: " + startY);
@@ -282,6 +282,12 @@ public void setPlayerWon(String playerWon) {
 
     System.out.println("HAS WON!!!");
     gamedata.setWonGame(true);
+
+    for (int i = 0; i < GameBoardROW; i++) {
+      for (int j = 0; j < GameBoardCOL; j++) {
+        piceseslocation[i][j].setDisable(true);
+      }
+    }
 
     String colorWon = _piece.getPieceColor();
     gamedata.setPlayerWon(colorWon);
