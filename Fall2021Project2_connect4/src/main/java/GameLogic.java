@@ -9,7 +9,6 @@ import javafx.util.Duration;
 import java.lang.String;
 import java.util.regex.Pattern;
 import javafx.animation.PauseTransition;
-import java.util.ArrayList;
 
 public class GameLogic {
 
@@ -181,26 +180,31 @@ public class GameLogic {
   private boolean iswonleftright(GameButton _piece, String _winningcombo){
     String columpattern = "";
     // ArrayList<GameButton> colorsArray = new ArrayList<>();
-    GameButton colorsArray[] = new GameButton[GameBoardCOL];
+    GameButton highlightMe[] = new GameButton[4];
 
     // this is just to commit
     
+    int j = 0;
     // looping through the column to find the same color pieces
     for(int i = 0; i < GameBoardCOL; i++){
       if(piceseslocation[_piece.getXcord()][i].getPieceColor() != null){
         columpattern = columpattern.concat(piceseslocation[_piece.getXcord()][i].getPieceColor());
+
+        if(piceseslocation[_piece.getXcord()][i].getPieceColor() == _piece.getPieceColor()){
+          highlightMe[j] = piceseslocation[_piece.getXcord()][i];
+          j++;
+        }
+        else{
+          j = 0;
+        }
       }
-      colorsArray[i] = _piece;
-      System.out.println("This is colorsArray: " + colorsArray[i].getPieceColor());
     }
 
     if(Pattern.compile(_winningcombo).matcher(columpattern).matches()){
-      for(int i = 0; i < GameBoardCOL; i++){
-        if(colorsArray[i].getPieceColor() == _piece.getPieceColor()){
-          colorsArray[i].setStyle("-fx-background-color: yellow;");
-          return true;
-        }
+      for(int i = 0; i < 4; i++){
+        highlightMe[i].setStyle("-fx-background-color: yellow;");
       }
+      return true;
     }
 
     return false;
@@ -229,6 +233,9 @@ public class GameLogic {
     // System.out.println("Y cord: " + _piece.getYcord());
 //     
 // 
+    GameButton highlightMe[] = new GameButton[4];
+
+    int i = 0;
     for (int j = 0; j < GameBoardROW; j++) {
       int Ycord = _piece.getXcord() + _piece.getYcord() - j;
 
@@ -238,7 +245,13 @@ public class GameLogic {
         
         if(_piece.getXcord() < 6){
           if (piceseslocation[j][Ycord].getPieceColor() != null) {
-              diagonalPattern = diagonalPattern.concat(piceseslocation[j][Ycord].getPieceColor());
+            diagonalPattern = diagonalPattern.concat(piceseslocation[j][Ycord].getPieceColor());
+
+            if(piceseslocation[j][Ycord].getPieceColor() == _piece.getPieceColor()){
+              highlightMe[i] = piceseslocation[j][Ycord];
+              i++;
+            }
+            else i = 0;
           }
         }
       }
@@ -246,7 +259,14 @@ public class GameLogic {
 
     // System.out.println("This is diagonalPattern: " + diagonalPattern);
 
-    return Pattern.compile(_winningcombo).matcher(diagonalPattern).matches();
+    if(Pattern.compile(_winningcombo).matcher(diagonalPattern).matches()){
+      for(int j = 0; j < 4; j++){
+        highlightMe[j].setStyle("-fx-background-color: yellow;");
+      }
+      return true;
+    }
+
+    return false;
 
   }
 
@@ -254,10 +274,12 @@ public class GameLogic {
   private boolean iswonDiagonalLandR(GameButton _piece, String _winningcombo) {
 
     String diagonalPattern = "";
+    GameButton highlightMe[] = new GameButton[4];
 
     System.out.println("X cord: " + _piece.getXcord());
     System.out.println("Y cord: " + _piece.getYcord());
 
+    int i = 0;
     for (int j = 0; j < GameBoardROW; j++) {
       int Ycord = _piece.getXcord() - _piece.getYcord() + j;
 
@@ -267,16 +289,28 @@ public class GameLogic {
         
         if(Ycord < 6){
           if (piceseslocation[Ycord][j].getPieceColor() != null) {
-              diagonalPattern = diagonalPattern.concat(piceseslocation[Ycord][j].getPieceColor());
+            diagonalPattern = diagonalPattern.concat(piceseslocation[Ycord][j].getPieceColor());
+
+            if(piceseslocation[Ycord][j].getPieceColor() == _piece.getPieceColor()){
+              highlightMe[i] = piceseslocation[Ycord][j];
+              i++;
+            }
+            else i = 0;
           }
         }
       }
-      // if (piceseslocation[startX][j].getPieceColor() != null) {
-      //   columpattern = columpattern.concat(piceseslocation[startX--][j].getPieceColor());
-      // }
-
     }
-    return Pattern.compile(_winningcombo).matcher(diagonalPattern).matches();
+
+    // System.out.println("This is diagonalPattern: " + diagonalPattern);
+
+    if(Pattern.compile(_winningcombo).matcher(diagonalPattern).matches()){
+      for(int j = 0; j < 4; j++){
+        highlightMe[j].setStyle("-fx-background-color: yellow;");
+      }
+      return true;
+    }
+
+    return false;
 
   }
 
@@ -290,51 +324,25 @@ public class GameLogic {
     if(iswonleftright(_piece, regex)){
       // int leftright = 0;
       // hasWon(_piece, leftright);
+      hasWon(_piece);
     }
 
     if (iswonUPDown(_piece, regex)) {
-      int updwn = 1;
-      hasWon(_piece, updwn);
+      // int updwn = 1;
+      hasWon(_piece);
     }
 
     if (iswonDiagonalRandL(_piece, regex)) {
-      int dRandL = 2;
-      hasWon(_piece, dRandL);
+      hasWon(_piece);
     }
 
     if (iswonDiagonalLandR(_piece, regex)) {
-      int dLandR = 3;
-      hasWon(_piece, dLandR);
+      hasWon(_piece);
     }
 
   }
 
 
-  private void righthmostpiece(GameButton _piece, int Ycord){
-    if (piceseslocation[_piece.getXcord()][Ycord].getPieceColor() != _piece.getPieceColor()) return;
-    else{
-      piceseslocation[_piece.getXcord()][Ycord].setStyle("-fx-background-color: yellow;");
-
-      if(Ycord+1 == GameBoardCOL){
-        piceseslocation[_piece.getXcord()][Ycord].setStyle("-fx-background-color: yellow;");
-        return ;
-      } 
-      righthmostpiece(_piece, Ycord + 1);
-    }
-  }
-
-  private void lefthmostpiece(GameButton _piece, int Ycord){
-    if (piceseslocation[_piece.getXcord()][Ycord].getPieceColor() != _piece.getPieceColor()) return;
-    else{
-      piceseslocation[_piece.getXcord()][Ycord].setStyle("-fx-background-color: yellow;");
-
-      if(Ycord <= 0){
-        piceseslocation[_piece.getXcord()][Ycord + 1].setStyle("-fx-background-color: yellow;");
-        return;
-      }
-      righthmostpiece(_piece, Ycord - 1);
-    }
-  }
 
   // returning player name who won
   public String getPlayerWon() {
@@ -347,7 +355,7 @@ public class GameLogic {
   }
 
   // whoever wins the game disabling the board and setting appropriate values according to the color
-  public void hasWon(GameButton _piece, int howplayerwon){
+  public void hasWon(GameButton _piece){
 
     gamedata.setWonGame(true);
 
@@ -362,94 +370,6 @@ public class GameLogic {
     gamedata.setPlayerWon(colorWon);
     // setting the player who won to a public method for better implementation
     setPlayerWon(colorWon);
-
-    GameButton winningPiece = _piece;
-    int winningpieceX = winningPiece.getXcord();
-    int winningpieceY = winningPiece.getYcord();
-
-    // left Right
-//     if (howplayerwon == 0) {
-//       // winningpieceY = righthmostpiece(_piece, _piece.getYcord());
-//       // if(winningpieceY - 1 >= 0){
-//       //   if(piceseslocation[winningpieceX][winningpieceY - 1].getPieceColor() == _piece.getPieceColor() &&
-//       //   piceseslocation[winningpieceX][winningpieceY + 1].getPieceColor() == _piece.getPieceColor()){
-//       //     righthmostpiece(_piece, winningpieceY + 1);
-//       //     lefthmostpiece(_piece, winningpieceY - 1);
-//       //   }
-//       //   else if (piceseslocation[winningpieceX][winningpieceY - 1].getPieceColor() == _piece.getPieceColor()) {
-//       //     for (int i = 0; i < 4; i++) {
-//       //       piceseslocation[winningpieceX][winningpieceY - i].setStyle("-fx-background-color: yellow;");
-//       //     }
-//       //   }
-//       // } else {
-//       //   for (int i = 0; i < 4; i++) {
-//       //     piceseslocation[winningpieceX][winningpieceY + i].setStyle("-fx-background-color: yellow;");
-//       //   }
-//       // }
-// 
-//       if(winningpieceY - 1 >= 0 && winningpieceY + 1 <= GameBoardCOL){
-//         if(piceseslocation[winningpieceX][winningpieceY - 1].getPieceColor() == _piece.getPieceColor() &&
-//         piceseslocation[winningpieceX][winningpieceY + 1].getPieceColor() == _piece.getPieceColor()){
-//           righthmostpiece(_piece, winningpieceY + 1);
-//           lefthmostpiece(_piece, winningpieceY - 1);
-//         }
-//       }
-// 
-//       // if(winningpieceY - 1 >= 0){
-//       //   if (piceseslocation[winningpieceX][winningpieceY - 1].getPieceColor() == _piece.getPieceColor()) {
-//       //     for (int i = 0; i < 4; i++) {
-//       //       piceseslocation[winningpieceX][winningpieceY - i].setStyle("-fx-background-color: yellow;");
-//       //     }
-//       //   }
-//       // }
-//       // else {
-//       //   for (int i = 0; i < 4; i++) {
-//       //     piceseslocation[winningpieceX][winningpieceY + i].setStyle("-fx-background-color: yellow;");
-//       //   }
-//       // }
-//     }
-
-    // Up Down
-    if (howplayerwon == 1) {
-      if (piceseslocation[winningpieceX - 1][winningpieceY].getPieceColor() == _piece.getPieceColor()) {
-        for (int i = 0; i < 4; i++) {
-          piceseslocation[winningpieceX - i][winningpieceY].setStyle("-fx-background-color: yellow;");
-        }
-      } else {
-        for (int i = 0; i < 4; i++) {
-          piceseslocation[winningpieceX + i][winningpieceY].setStyle("-fx-background-color: yellow;");
-        }
-      }
-
-    }
-
-    // Diagonal Right Left
-    if (howplayerwon == 2) {
-      if (piceseslocation[winningpieceX + 1][winningpieceY - 1].getPieceColor() == _piece.getPieceColor()) {
-        for (int i = 0; i < 4; i++) {
-          piceseslocation[winningpieceX++][winningpieceY - i].setStyle("-fx-background-color: yellow;");
-        }
-      } else {
-        for (int i = 0; i < 4; i++) {
-          piceseslocation[winningpieceX--][winningpieceY + i].setStyle("-fx-background-color: yellow;");
-        }
-      }
-
-    }
-
-    // Diagonal Left Right
-    if (howplayerwon == 3) {
-      if (piceseslocation[winningpieceX + 1][winningpieceY + 1].getPieceColor() == _piece.getPieceColor()) {
-        for (int i = 0; i < 4; i++) {
-          piceseslocation[winningpieceX++][winningpieceY + i].setStyle("-fx-background-color: yellow;");
-        }
-      } else {
-        for (int i = 0; i < 4; i++) {
-          piceseslocation[winningpieceX--][winningpieceY - i].setStyle("-fx-background-color: yellow;");
-        }
-      }
-
-    }
 
   }
 
