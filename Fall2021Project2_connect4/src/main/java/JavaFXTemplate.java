@@ -261,6 +261,7 @@ public class JavaFXTemplate extends Application {
     HBox player_turnis_2 = new HBox(20, turndisplay);
     player_turnis_2.setStyle("-fx-font-size:16");
     player_turnis_2.setAlignment(Pos.CENTER);
+
     player_turnis_2.setPadding(new Insets(50));
 
     clearRoot();
