@@ -25,10 +25,6 @@ public class GameData extends GameLogic {
     playerMoveStack = new Stack<>();
   }
 
-  // public Player getPlayerInfo(int playerNumber){
-  // if(playerNumber == 1) return player1;
-  // else return player2;
-  // }
 
   public void addplayerMove(GameButton _piece){
     playerMoveStack.push(_piece);
