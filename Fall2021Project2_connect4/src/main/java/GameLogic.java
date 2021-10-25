@@ -182,6 +182,8 @@ public class GameLogic {
     String columpattern = "";
     // ArrayList<GameButton> colorsArray = new ArrayList<>();
     GameButton colorsArray[] = new GameButton[GameBoardCOL];
+
+    // this is just to commit
     
     // looping through the column to find the same color pieces
     for(int i = 0; i < GameBoardCOL; i++){
