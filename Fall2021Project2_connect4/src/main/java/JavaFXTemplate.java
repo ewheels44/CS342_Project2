@@ -9,6 +9,9 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.event.EventHandler;
 import javafx.event.ActionEvent;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.scene.layout.VBox;
@@ -165,7 +168,7 @@ public class JavaFXTemplate extends Application {
     // initally starting the game with the original theme
     OriginalTheme();
     // setting the scene with the parent node and a display size of 1750x980, also the GUI window is resizeable
-    Scene main_S= new Scene(root, 1750, 980);
+    Scene main_S= new Scene(root, 1920, 980);
     _pirmarystage.setResizable(true);
 
     return main_S ;
@@ -383,19 +386,27 @@ public class JavaFXTemplate extends Application {
   public static Scene winnerWinnerChickenDinner(){
     // final screen after anyone of the player wins
     BorderPane winnerroot = new BorderPane();
-    TextField playerWon = new TextField(gameLogic.getPlayerWon());
-    playerWon.setEditable(false);
 
+    if ( gameLogic.getPlayerWon() == "B" ) {
+      winnerroot.setStyle("-fx-background-image: url(blue_won.png)");
+    }
+    else{
+      winnerroot.setStyle("-fx-background-image: url(red_won.jpg)");
+    }
+
+    // if the user hits play agian reset the game board to start a new game
     Button playagain = new Button("Play again");
     playagain.setOnAction(reset); 
 
+    // Exit button
     Button exit = new Button("EXIT GAME");
     exit.setOnAction(e -> System.exit(0));
 
+    // placing the buttons on to the screen
     winnerroot.setCenter(playagain);
-    winnerroot.setBottom(playerWon);
     winnerroot.setLeft(exit);
 
+    //returning the final scene
     return new Scene(winnerroot, 1920, 980);
   }
 
