@@ -396,15 +396,21 @@ public class JavaFXTemplate extends Application {
 
     // if the user hits play agian reset the game board to start a new game
     Button playagain = new Button("Play again");
-    playagain.setOnAction(reset); 
+    playagain.setOnAction(reset);
+    playagain.setStyle("-fx-font-size: 24");
 
     // Exit button
     Button exit = new Button("EXIT GAME");
+    exit.setStyle("-fx-font-size: 24");
     exit.setOnAction(e -> System.exit(0));
 
+    HBox end_game_menu = new HBox();
+    end_game_menu.getChildren().addAll(playagain, exit);
+    end_game_menu.setAlignment(Pos.CENTER);
+    end_game_menu.setPadding(new Insets(10));
+    end_game_menu.setSpacing(10);
     // placing the buttons on to the screen
-    winnerroot.setCenter(playagain);
-    winnerroot.setLeft(exit);
+      winnerroot.setBottom(end_game_menu);
 
     //returning the final scene
     return new Scene(winnerroot, 1920, 980);
