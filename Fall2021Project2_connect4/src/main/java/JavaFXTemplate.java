@@ -32,7 +32,6 @@ public class JavaFXTemplate extends Application {
 
   private static EventHandler<ActionEvent> reset;
   private EventHandler<ActionEvent> welcomeEvent;
-  private EventHandler<ActionEvent> changeTheme;
 
 
   public static void main(String[] args) {

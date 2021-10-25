@@ -151,6 +151,7 @@ public class GameLogic {
 
     // going back to the old co ordinates
     GameButton newGameButton = new GameButton();
+//    newGameButton.setOnAction(disableButton(_primarystage));
     newGameButton.addXandYcords(newGameButton, lastmoveX, lastmoveY);
     gameboard.add(newGameButton, lastmoveY, lastmoveX);
 
@@ -182,7 +183,6 @@ public class GameLogic {
     // ArrayList<GameButton> colorsArray = new ArrayList<>();
     GameButton highlightMe[] = new GameButton[4];
 
-    // this is just to commit
     
     int j = 0;
     // looping through the column to find the same color pieces
@@ -276,16 +276,16 @@ public class GameLogic {
     String diagonalPattern = "";
     GameButton highlightMe[] = new GameButton[4];
 
-    System.out.println("X cord: " + _piece.getXcord());
-    System.out.println("Y cord: " + _piece.getYcord());
+    // System.out.println("X cord: " + _piece.getXcord());
+    // System.out.println("Y cord: " + _piece.getYcord());
 
     int i = 0;
     for (int j = 0; j < GameBoardROW; j++) {
       int Ycord = _piece.getXcord() - _piece.getYcord() + j;
 
       if(Ycord < GameBoardCOL && Ycord >= 0){
-        System.out.println("This is Xcord(): " + Ycord);
-        System.out.println("this is Ycord(iterator): " + j);
+        // System.out.println("This is Xcord(): " + Ycord);
+        // System.out.println("this is Ycord(iterator): " + j);
         
         if(Ycord < 6){
           if (piceseslocation[Ycord][j].getPieceColor() != null) {
