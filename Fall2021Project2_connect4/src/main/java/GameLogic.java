@@ -12,7 +12,7 @@ import javafx.animation.PauseTransition;
 
 public class GameLogic {
 
-  private GameData gamedata; 
+  private GameData gamedata;
   private GameButton pieces;
   private GridPane gameboard;
 
@@ -20,20 +20,20 @@ public class GameLogic {
   private int GameBoardCOL = 7;
 
   private GameButton piceseslocation[][];
-  
+
   private EventHandler<ActionEvent> disableButton;
   private PauseTransition pause = new PauseTransition(Duration.seconds(5));
 
   private String playerWon;
 
-  public GridPane creategameboard(Stage _primarystage){
+  public GridPane creategameboard(Stage _primarystage) {
     gameboard = new GridPane();
     gameboard.setAlignment(Pos.CENTER);
     gameboard.setHgap(5);
     gameboard.setVgap(5);
     gameboard.setStyle("-fx-font-size: 50;" + "-fx-boarder-size: 50;");
 
-    piceseslocation = new GameButton[GameBoardROW][GameBoardCOL]; 
+    piceseslocation = new GameButton[GameBoardROW][GameBoardCOL];
 
     for (int i = 0; i < GameBoardROW; i++) {
       for (int j = 0; j < GameBoardCOL; j++) {
@@ -46,7 +46,6 @@ public class GameLogic {
         // ^ .add takes col first then row
         gameboard.add(pieces, j, i);
 
-
         piceseslocation[i][j] = pieces;
       }
     }
@@ -56,8 +55,8 @@ public class GameLogic {
     return gameboard;
   }
 
-  public EventHandler<ActionEvent> disableButton(Stage _primarystage){
-    disableButton = new EventHandler<ActionEvent>(){
+  public EventHandler<ActionEvent> disableButton(Stage _primarystage) {
+    disableButton = new EventHandler<ActionEvent>() {
       @Override
       public void handle(ActionEvent event) {
         // TODO Auto-generated method stub
@@ -68,34 +67,40 @@ public class GameLogic {
 
         String turn = whosTurn();
         // P1 == B | P2 == R, just set the whole box to a color
-        if ( turn == "B") {
-          b1.setStyle ("-fx-background-color: #0000f5;");
-        }
-        else {
-          b1.setStyle ("-fx-background-color: #ff0000;");
+        if (turn == "B") {
+          b1.setStyle("-fx-background-color: #0000f5;");
+        } else {
+          b1.setStyle("-fx-background-color: #ff0000;");
         }
 
-//        b1.setText(turn);
+        // b1.setText(turn);
         b1.setPieceColor(turn);
         JavaFXTemplate.addturnDisp(turn, b1);
+
+        if (gamedata.getTotalPieces() + 1 == GameBoardROW * GameBoardCOL) {
+          // /= "ITS A TIE";
+          setPlayerWon("Its a tie, play again to settle this dispute");
+          pause.setOnFinished(e -> _primarystage.setScene(JavaFXTemplate.winnerWinnerChickenDinner()));
+          pause.play();
+        }
+
         placePiece(b1);
-        if(gamedata.isWonGame()){
-          // _primarystage.setScene(JavaFXTemplate.winnerWinnerChickenDinner()); 
+        if (gamedata.isWonGame()) {
+          // _primarystage.setScene(JavaFXTemplate.winnerWinnerChickenDinner());
           pause.setOnFinished(e -> _primarystage.setScene(JavaFXTemplate.winnerWinnerChickenDinner()));
           pause.play();
         }
       }
     };
-    
+
     return disableButton;
   }
 
-
-  public GameButton getPiece(){
+  public GameButton getPiece() {
     return this.pieces;
   }
 
-  public GameButton getPieceXandY(int _X, int _Y){
+  public GameButton getPieceXandY(int _X, int _Y) {
     return piceseslocation[_X][_Y];
   }
 
@@ -105,22 +110,22 @@ public class GameLogic {
   // isValidMove
   // hasWon
   //
-  public void placePiece(GameButton _piece){
-    System.out.println(_piece.getXcord());
-    System.out.println(_piece.getYcord());
-    
+  public void placePiece(GameButton _piece) {
+    // System.out.println(_piece.getXcord());
+    // System.out.println(_piece.getYcord());
+
     hasNeighborSameColor(_piece);
     gamedata.incTotalpices();
-    
+
     gamedata.addplayerMove(_piece);
     // gamedata.TESTprintplayermovestack();
   }
 
-  public int getTotalPieces(){
+  public int getTotalPieces() {
     return gamedata.getTotalPieces();
   }
 
-  public void reversemove(){
+  public void reversemove() {
     GameButton lastmove = gamedata.popPlayerMove();
 
     // gamedata.TESTprintplayermovestack();
@@ -143,44 +148,45 @@ public class GameLogic {
 
   }
 
-  
-  public GameButton DropPiece(GameButton _piece, int X, int Y){
+  public GameButton DropPiece(GameButton _piece, int X, int Y) {
 
-    System.out.println("X cord: " + _piece.getXcord());
-    System.out.println("Y cord: " + _piece.getYcord());
+    // System.out.println("X cord: " + _piece.getXcord());
+    // System.out.println("Y cord: " + _piece.getYcord());
 
-    if(X >= 5) return _piece;
+    if (X >= 5)
+      return _piece;
 
-    GameButton PieceBelow = getPieceXandY(X+1, Y);
+    GameButton PieceBelow = getPieceXandY(X + 1, Y);
 
-    if(PieceBelow.getisValid() && PieceBelow.getXcord() != 6){
+    if (PieceBelow.getisValid() && PieceBelow.getXcord() != 6) {
       _piece = PieceBelow;
       return DropPiece(_piece, X = X + 1, Y);
-    }
-    else return _piece;
+    } else
+      return _piece;
 
   }
 
-
-  private boolean iswonleftright(GameButton _piece, String _winningcombo){
+  private boolean iswonleftright(GameButton _piece, String _winningcombo) {
 
     String columpattern = "";
 
-    for(int i = 0; i < GameBoardCOL - 1; i++){
-      if(piceseslocation[_piece.getXcord()][i].getPieceColor() != null){
+    for (int i = 0; i < GameBoardCOL; i++) {
+      if (piceseslocation[_piece.getXcord()][i].getPieceColor() != null) {
         columpattern = columpattern.concat(piceseslocation[_piece.getXcord()][i].getPieceColor());
       }
     }
 
+    System.out.println("This is columpattern: " + columpattern);
+
     return Pattern.compile(_winningcombo).matcher(columpattern).matches();
   }
 
-  private boolean iswonUPDown(GameButton _piece, String _winningcombo){
-    
+  private boolean iswonUPDown(GameButton _piece, String _winningcombo) {
+
     String columpattern = "";
 
-    for(int i = 0; i < GameBoardROW; i++){
-      if(piceseslocation[i][_piece.getYcord()].getPieceColor() != null){
+    for (int i = 0; i < GameBoardROW; i++) {
+      if (piceseslocation[i][_piece.getYcord()].getPieceColor() != null) {
         columpattern = columpattern.concat(piceseslocation[i][_piece.getYcord()].getPieceColor());
       }
     }
@@ -188,99 +194,126 @@ public class GameLogic {
     return Pattern.compile(_winningcombo).matcher(columpattern).matches();
   }
 
-  private boolean iswonDiagonalRandL(GameButton _piece, String _winningcombo){
-    
-    String columpattern = "";
+  private boolean iswonDiagonalRandL(GameButton _piece, String _winningcombo) {
 
-    int startX = GameBoardROW - 1;
-    // int startY = _piece.getYcord() - (_piece.getYcord() - 1);
-    // if(startY <= 1) startY = 0;
-    int startY = 0;
-
-    // System.out.println("this is starty: " + startY);
-
-    for (int j = startY; j < GameBoardCOL; j++) {
-      if(piceseslocation[startX][j].getPieceColor() != null){
-        columpattern = columpattern.concat(piceseslocation[startX--][j].getPieceColor());
-      }
-
-      // System.out.println("Start should decriment: " + startX);
-      // System.out.println("j should decriment: " + j);
-    }
-
-    // System.out.println("This is columpattern: " + columpattern);
-
-    return Pattern.compile(_winningcombo).matcher(columpattern).matches();
-  }
-
-  private boolean iswonDiagonalLandR(GameButton _piece, String _winningcombo){
-
-    String columpattern = "";
-
-    int startX = 0;
-    int startY = GameBoardCOL - 1;
-
-    System.out.println("this is starty: " + startY);
-
-    for (int j = startY; j > 0 ; j--) {
-      if(piceseslocation[startX][j].getPieceColor() != null){
-        columpattern = columpattern.concat(piceseslocation[startX--][j].getPieceColor());
-      }
-
-      // System.out.println("Start should decriment: " + startX);
-      // System.out.println("j should decriment: " + j);
-    }
-
-    // System.out.println("This is columpattern: " + columpattern);
-
-    return Pattern.compile(_winningcombo).matcher(columpattern).matches();
-      
-  }
-
-  public void hasNeighborSameColor(GameButton _piece){
-
-//     Pattern winningCombo = Pattern.compile(".s");
+    String diagonalPattern = "";
 // 
-    // boolean b1 = Pattern.compile("(.*BBBB.*)|(.*RRRR*.)").matcher("BBRBBBB").matches();
+    // System.out.println("X cord: " + _piece.getXcord());
+    // System.out.println("Y cord: " + _piece.getYcord());
+//     
+// 
+    for (int j = 0; j < GameBoardROW; j++) {
+      int Ycord = _piece.getXcord() + _piece.getYcord() - j;
+
+      if(Ycord < GameBoardCOL && Ycord >= 0){
+        // System.out.println("this is Xcord(iterator): " + j);
+        // System.out.println("This is Ycord(): " + Ycord);
+        
+        if(_piece.getXcord() < 6){
+          if (piceseslocation[j][Ycord].getPieceColor() != null) {
+              diagonalPattern = diagonalPattern.concat(piceseslocation[j][Ycord].getPieceColor());
+          }
+        }
+        // System.out.println("Start should decriment: " + startX);
+        // System.out.println("j should decriment: " + j);
+
+        }
+
+    }
+
+    // System.out.println("This is diagonalPattern: " + diagonalPattern);
+
+    return Pattern.compile(_winningcombo).matcher(diagonalPattern).matches();
+
+  }
+
+
+  private boolean iswonDiagonalLandR(GameButton _piece, String _winningcombo) {
+
+    String diagonalPattern = "";
+
+    System.out.println("X cord: " + _piece.getXcord());
+    System.out.println("Y cord: " + _piece.getYcord());
+
+    for (int j = 0; j < GameBoardROW; j++) {
+      int Ycord = _piece.getXcord() - _piece.getYcord() + j;
+
+      if(Ycord < GameBoardCOL && Ycord >= 0){
+        System.out.println("This is Xcord(): " + Ycord);
+        System.out.println("this is Ycord(iterator): " + j);
+        
+        if(Ycord < 6){
+          if (piceseslocation[Ycord][j].getPieceColor() != null) {
+              diagonalPattern = diagonalPattern.concat(piceseslocation[Ycord][j].getPieceColor());
+          }
+        }
+      }
+      // if (piceseslocation[startX][j].getPieceColor() != null) {
+      //   columpattern = columpattern.concat(piceseslocation[startX--][j].getPieceColor());
+      // }
+
+      // System.out.println("Start should decriment: " + startX);
+      // System.out.println("j should decriment: " + j);
+    }
+
+    // System.out.println("This is diagonalPattern: " + diagonalPattern);
+
+    return Pattern.compile(_winningcombo).matcher(diagonalPattern).matches();
+
+  }
+
+  public void hasNeighborSameColor(GameButton _piece) {
+
+    // Pattern winningCombo = Pattern.compile(".s");
+    //
+    // boolean b1 =
+    // Pattern.compile("(.*BBBB.*)|(.*RRRR*.)").matcher("BBRBBBB").matches();
     // System.out.println(b1);
 
     // String winningCombo = "(BBBB)|(RRRR)";
     // String winningCombo = "(B{4,}+)||(R{4,}+)";
-    final String regex = "(.*BBBB.*)|(.*RRRR*.)";
-    
-    if(iswonleftright(_piece, regex)){
+    final String regex = "(.*BBBB.*)|(.*RRRR.*)";
+
+    if (iswonleftright(_piece, regex)) {
       int leftright = 0;
       hasWon(_piece, leftright);
     }
 
-    if(iswonUPDown(_piece, regex)){
+    if (iswonUPDown(_piece, regex)) {
       int updwn = 1;
       hasWon(_piece, updwn);
     }
 
-    if(iswonDiagonalRandL(_piece, regex)){
+    if (iswonDiagonalRandL(_piece, regex)) {
       int dRandL = 2;
       hasWon(_piece, dRandL);
     }
 
-    if(iswonDiagonalLandR(_piece, regex)){
+    if (iswonDiagonalLandR(_piece, regex)) {
       int dLandR = 3;
       hasWon(_piece, dLandR);
     }
 
   }
 
-public String getPlayerWon() {
-	return playerWon;
-}
+  public String getPlayerWon() {
+    return playerWon;
+  }
 
-public void setPlayerWon(String playerWon) {
-	this.playerWon = playerWon;
-}
+  public void setPlayerWon(String playerWon) {
+    this.playerWon = playerWon;
+  }
 
-  public void hasWon(GameButton _piece, int howplayerwon){
+  private int righthmostpiece(GameButton _piece, int Ycord){
+    if (piceseslocation[_piece.getXcord()][Ycord].getPieceColor() != _piece.getPieceColor()) return _piece.getYcord();
+    else{
+      return righthmostpiece(_piece, Ycord - 1);
+    }
+  }
 
-    System.out.println("HAS WON!!!");
+  public void hasWon(GameButton _piece, int howplayerwon) {
+
+    // System.out.println("HAS WON!!!");
     gamedata.setWonGame(true);
 
     for (int i = 0; i < GameBoardROW; i++) {
@@ -294,79 +327,75 @@ public void setPlayerWon(String playerWon) {
 
     setPlayerWon(colorWon);
 
-    System.out.println("X cord has won!: " + _piece.getXcord());
-    System.out.println("Y cord has won!: " + _piece.getYcord());
+    // System.out.println("X cord has won!: " + _piece.getXcord());
+    // System.out.println("Y cord has won!: " + _piece.getYcord());
     GameButton winningPiece = _piece;
     int winningpieceX = winningPiece.getXcord();
     int winningpieceY = winningPiece.getYcord();
 
     // left Right
-    if(howplayerwon == 0){
-      if(piceseslocation[winningpieceX][winningpieceY - 1].getPieceColor() == _piece.getPieceColor()){
-        for(int i = 0; i < 4; i++){
-          piceseslocation[winningpieceX][winningpieceY - i].setStyle("-fx-background-color: yellow;"); 
+    if (howplayerwon == 0) {
+      // winningpieceY = righthmostpiece(_piece, _piece.getYcord());
+      if (piceseslocation[winningpieceX][winningpieceY - 1].getPieceColor() == _piece.getPieceColor()) {
+        for (int i = 0; i < 4; i++) {
+          piceseslocation[winningpieceX][winningpieceY - i].setStyle("-fx-background-color: yellow;");
         }
-      }
-      else{
-        for(int i = 0; i < 4; i++){
-          piceseslocation[winningpieceX][winningpieceY + i].setStyle("-fx-background-color: yellow;"); 
+      } else {
+        for (int i = 0; i < 4; i++) {
+          piceseslocation[winningpieceX][winningpieceY + i].setStyle("-fx-background-color: yellow;");
         }
       }
     }
 
     // Up Down
-    if(howplayerwon == 1){
-      if(piceseslocation[winningpieceX - 1][winningpieceY].getPieceColor() == _piece.getPieceColor()){
-        for(int i = 0; i < 4; i++){
-          piceseslocation[winningpieceX - i][winningpieceY].setStyle("-fx-background-color: yellow;"); 
+    if (howplayerwon == 1) {
+      if (piceseslocation[winningpieceX - 1][winningpieceY].getPieceColor() == _piece.getPieceColor()) {
+        for (int i = 0; i < 4; i++) {
+          piceseslocation[winningpieceX - i][winningpieceY].setStyle("-fx-background-color: yellow;");
         }
-      }
-      else{
-        for(int i = 0; i < 4; i++){
-          piceseslocation[winningpieceX + i][winningpieceY].setStyle("-fx-background-color: yellow;"); 
+      } else {
+        for (int i = 0; i < 4; i++) {
+          piceseslocation[winningpieceX + i][winningpieceY].setStyle("-fx-background-color: yellow;");
         }
       }
 
     }
 
     // Diagonal Right Left
-    if(howplayerwon == 2){
-      if(piceseslocation[winningpieceX + 1][winningpieceY - 1].getPieceColor() == _piece.getPieceColor()){
-        for(int i = 0; i < 4; i++){
-          piceseslocation[winningpieceX++][winningpieceY - i].setStyle("-fx-background-color: yellow;"); 
+    if (howplayerwon == 2) {
+      if (piceseslocation[winningpieceX + 1][winningpieceY - 1].getPieceColor() == _piece.getPieceColor()) {
+        for (int i = 0; i < 4; i++) {
+          piceseslocation[winningpieceX++][winningpieceY - i].setStyle("-fx-background-color: yellow;");
         }
-      }
-      else{
-        for(int i = 0; i < 4; i++){
-          piceseslocation[winningpieceX--][winningpieceY + i].setStyle("-fx-background-color: yellow;"); 
-        }
-      }
-
-    }
-
-    // Diagonal Left Right 
-    if(howplayerwon == 3){
-      if(piceseslocation[winningpieceX + 1][winningpieceY + 1].getPieceColor() == _piece.getPieceColor()){
-        for(int i = 0; i < 4; i++){
-          piceseslocation[winningpieceX++][winningpieceY + i].setStyle("-fx-background-color: yellow;"); 
-        }
-      }
-      else{
-        for(int i = 0; i < 4; i++){
-          piceseslocation[winningpieceX--][winningpieceY - i].setStyle("-fx-background-color: yellow;"); 
+      } else {
+        for (int i = 0; i < 4; i++) {
+          piceseslocation[winningpieceX--][winningpieceY + i].setStyle("-fx-background-color: yellow;");
         }
       }
 
     }
 
+    // Diagonal Left Right
+    if (howplayerwon == 3) {
+      if (piceseslocation[winningpieceX + 1][winningpieceY + 1].getPieceColor() == _piece.getPieceColor()) {
+        for (int i = 0; i < 4; i++) {
+          piceseslocation[winningpieceX++][winningpieceY + i].setStyle("-fx-background-color: yellow;");
+        }
+      } else {
+        for (int i = 0; i < 4; i++) {
+          piceseslocation[winningpieceX--][winningpieceY - i].setStyle("-fx-background-color: yellow;");
+        }
+      }
+
+    }
 
   }
 
-  public String whosTurn(){
-    return gamedata.getWhosTurn(); 
+  public String whosTurn() {
+    return gamedata.getWhosTurn();
   }
 
-  public String nextTurn(){
+  public String nextTurn() {
     return gamedata.getNextTurn();
   }
 
