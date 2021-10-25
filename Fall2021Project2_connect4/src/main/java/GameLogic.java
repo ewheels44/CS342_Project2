@@ -56,7 +56,7 @@ public class GameLogic {
     return gameboard;
   }
 
-  public EventHandler<ActionEvent> disableButton(Stage _primarystage){
+  public EventHandler<ActionEvent> disableButton(Stage _primarystage ){
     disableButton = new EventHandler<ActionEvent>(){
       @Override
       public void handle(ActionEvent event) {
@@ -68,7 +68,7 @@ public class GameLogic {
 
         String turn = whosTurn();
         // P1 == B | P2 == R, just set the whole box to a color
-        if ( turn == "B") {
+        if (turn == "B") {
           b1.setStyle ("-fx-background-color: #0000f5;");
         }
         else {

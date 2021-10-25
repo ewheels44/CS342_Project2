@@ -1,17 +1,16 @@
 import javafx.application.Application;
 
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.effect.BlendMode;
+import javafx.scene.image.Image;
+import javafx.scene.layout.*;
 import javafx.event.EventHandler;
 import javafx.event.ActionEvent;
-import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import java.util.HashMap;
 
@@ -40,13 +39,13 @@ public class JavaFXTemplate extends Application {
 
   public static void addturnDisp(String _turn, GameButton _piece){
     whosmove.getItems().add(_turn + " Player moved to (" + _piece.getXcord() + ", " + _piece.getYcord() + ")");
-    turndisplay.setText("It is " + gameLogic.nextTurn() + " Players turn");
+    turndisplay.setText("It is " + gameLogic.nextTurn() + "'s turn");
   }
 
   public static void removelast(){
     gameLogic.whosTurn();
     whosmove.getItems().remove(gameLogic.getTotalPieces()+1); // +1 offset the displayname
-    turndisplay.setText("It is " + gameLogic.nextTurn() + " Players turn");
+    turndisplay.setText("It is " + gameLogic.nextTurn() + "'s turn");
   }
 
 
@@ -58,11 +57,11 @@ public class JavaFXTemplate extends Application {
   //
   public Scene createGameScene(Stage _pirmarystage){
     root = new BorderPane();
-    
+
     gameLogic = new GameLogic();
     gameboard = gameLogic.creategameboard(_pirmarystage);
 
-    settings = new MenuBar(); 
+    settings = new MenuBar();
 
     Menu options = new Menu("Options");
     Menu gameplay = new Menu("Game play");
@@ -78,61 +77,26 @@ public class JavaFXTemplate extends Application {
     });
 
     MenuItem new_game = new MenuItem("New Game");
-    // new_game.setOnAction(e -> {
-    //   //TODO Restart the game
-    // });
     new_game.setOnAction(reset);
 
-    // TODO Maybe make it a function??
-    // TODO Pop up window, I can clean this up to make it look pretty later ( add a class? )
     MenuItem howtoplay = new MenuItem("How to play");
     howtoplay.setOnAction(e -> {
-      TextField howtoplaytext = new TextField("this should display how to play eventually");
-      howtoplaytext.setEditable(false);
-      Stage pop_up = new Stage();
-      pop_up.initModality(Modality.APPLICATION_MODAL);
-      pop_up.setTitle("How to play");
-      pop_up.setMinWidth(500);
-      pop_up.setMinHeight(250);
-      pop_up.setResizable(false);
-
-      Label m_label = new Label();
-      m_label.setText("Simply try to match four same color boxes in the same direction\nhorizontally, vertically or diagonally. \n" +
-        "Blue (Player One) will always go first");
-      m_label.setStyle("-fx-font-size:14");
-      m_label.setAlignment(Pos.CENTER);
-      Button close_btn = new Button("ok");
-      close_btn.setStyle("-fx-font-size:14");
-      close_btn.setOnAction(f -> {
-        pop_up.close();
-      });
-
-      VBox spot_close_btn = new VBox(10);
-      spot_close_btn.getChildren().addAll(m_label, close_btn);
-      spot_close_btn.setAlignment(Pos.CENTER);
-
-      Scene pop_scene = new Scene(spot_close_btn);
-      pop_up.setScene(pop_scene);
-      pop_up.show();
-
+      Popup_menu();
     });
 
     // theme menu
     MenuItem ogtheme = new MenuItem("Original Theme");
     ogtheme.setOnAction(e -> {
-      // this.game = ThemeOneScene();
       OriginalTheme();
     });
 
     MenuItem ThemeOne = new MenuItem("Theme One");
     ThemeOne.setOnAction(e -> {
-      // this.game = ThemeOneScene();
       ThemeOneScene();
     });
 
     MenuItem ThemeTwo = new MenuItem("Theme Two");
     ThemeTwo.setOnAction(e -> {
-      // this.game = ThemeOneScene();
       ThemeTwoScene();
     });
 
@@ -144,7 +108,6 @@ public class JavaFXTemplate extends Application {
       if(gameLogic.getTotalPieces() > 0){
         gameLogic.reversemove();
       }
-
     });
 
     //
@@ -170,7 +133,7 @@ public class JavaFXTemplate extends Application {
     //
 
     whosmove = new ListView<String>();
-    whosmove.getItems().add("NEW GAME!");
+    whosmove.getItems().add("Player Moves");
 
     turndisplay = new TextField(gameLogic.nextTurn());
     turndisplay.setEditable(false);
@@ -179,8 +142,39 @@ public class JavaFXTemplate extends Application {
     settings.getMenus().addAll(options, gameplay, themes);
 
     OriginalTheme();
+    Scene main_S= new Scene(root, 1750, 980);
+    _pirmarystage.setResizable(true);
+    return main_S ;
 
-    return new Scene(root, 1920, 980);
+  }
+
+  private void Popup_menu () {
+
+    Stage pop_up = new Stage();
+    pop_up.initModality(Modality.APPLICATION_MODAL);
+    pop_up.setTitle("How to play");
+    pop_up.setMinWidth(500);
+    pop_up.setMinHeight(250);
+    pop_up.setResizable(false);
+
+    Label m_label = new Label();
+    m_label.setText("Simply try to match four same color boxes in the same direction\nhorizontally, vertically or diagonally. \n" +
+            "Blue (Player One) will always go first");
+    m_label.setStyle("-fx-font-size:14");
+    m_label.setAlignment(Pos.CENTER);
+    Button close_btn = new Button("ok");
+    close_btn.setStyle("-fx-font-size:14");
+    close_btn.setOnAction(f -> {
+      pop_up.close();
+    });
+
+    VBox spot_close_btn = new VBox(10);
+    spot_close_btn.getChildren().addAll(m_label, close_btn);
+    spot_close_btn.setAlignment(Pos.CENTER);
+
+    Scene pop_scene = new Scene(spot_close_btn);
+    pop_up.setScene(pop_scene);
+    pop_up.show();
 
   }
 
@@ -191,16 +185,26 @@ public class JavaFXTemplate extends Application {
   // Orignal theme attributes
   //
   private void OriginalTheme(){
+      root.setStyle("-fx-background-color: #dcdcdc");
 
-    HBox topsettings = new HBox(20, settings);
-    VBox whosmoveDataBox = new VBox(20, whosmove);
-    HBox playersturn = new HBox(20, turndisplay);
+      HBox topsettings = new HBox(20, settings);
 
 
-    root.setLeft(playersturn);
-    root.setBottom(whosmoveDataBox);
-    root.setCenter(gameboard);
-    root.setTop(topsettings);
+      VBox whosmoveDataBox = new VBox(20, whosmove);
+      whosmoveDataBox.setStyle("-fx-font-size:16");
+      whosmoveDataBox.setBlendMode(BlendMode.DARKEN);
+      whosmoveDataBox.setAlignment(Pos.TOP_CENTER);
+
+      HBox playersturn = new HBox(20, turndisplay);
+      playersturn.setStyle("-fx-font-size:16");
+      playersturn.setAlignment(Pos.BOTTOM_RIGHT);
+      playersturn.setPadding(new Insets(10));
+
+      // setting the whole scene
+      root.setLeft(playersturn);
+      root.setBottom(whosmoveDataBox);
+      root.setCenter(gameboard);
+      root.setTop(topsettings);
   }
 
   private void clearRoot(){
@@ -217,12 +221,25 @@ public class JavaFXTemplate extends Application {
   // creates themeone
   //
   private void ThemeOneScene(){
+      root.setStyle("-fx-background-image: url(theme1.jpg)");
+      HBox settingsThemeOne = new HBox(20, settings);
 
-    VBox settingsThemeOne = new VBox(20, settings);
+      VBox whose_move = new VBox(20, whosmove );
+      whose_move.setPadding(new Insets(50));
+      whose_move.setAlignment(Pos.CENTER);
+      whose_move.setBlendMode(BlendMode.SCREEN);
 
-    clearRoot();
-    root.setCenter(gameboard);
-    root.setLeft(settingsThemeOne);
+      HBox player_turnis = new HBox(20, turndisplay);
+      player_turnis.setStyle("-fx-font-size:16");
+      player_turnis.setAlignment(Pos.CENTER);
+      player_turnis.setPadding(new Insets(20));
+
+
+      clearRoot();
+      root.setCenter(gameboard);
+      root.setLeft(settingsThemeOne);
+      root.setRight(whose_move);
+      root.setBottom(player_turnis);
 
   }
 
@@ -232,12 +249,25 @@ public class JavaFXTemplate extends Application {
   // creates themeTwo
   //
   private void ThemeTwoScene(){
+    root.setStyle("-fx-background-image: url(th2.jpg)");
+    HBox settingsThemeTwo = new HBox(20, settings);
+    settingsThemeTwo.setAlignment(Pos.TOP_RIGHT);
 
-    VBox settingsThemeTwo = new VBox(20, settings);
+    VBox whose_move_2 = new VBox(20, whosmove );
+    whose_move_2.setPadding(new Insets(50));
+    whose_move_2.setAlignment(Pos.CENTER);
+    whose_move_2.setBlendMode(BlendMode.SCREEN);
+
+    HBox player_turnis_2 = new HBox(20, turndisplay);
+    player_turnis_2.setStyle("-fx-font-size:16");
+    player_turnis_2.setAlignment(Pos.CENTER);
+    player_turnis_2.setPadding(new Insets(50));
 
     clearRoot();
     root.setCenter(gameboard);
     root.setRight(settingsThemeTwo);
+    root.setLeft(whose_move_2);
+    root.setBottom(player_turnis_2);
   }
 
 
@@ -267,7 +297,7 @@ public class JavaFXTemplate extends Application {
   
     };
 
-		sceneMap = new HashMap<String,Scene>();
+    sceneMap = new HashMap<String,Scene>();
     // this.game = createGameScene();
     // primaryStage.setScene(game);
     // primaryStage.show();
@@ -286,19 +316,28 @@ public class JavaFXTemplate extends Application {
 		// primaryStage.show();
 	}
 
-  private Scene createStartScreen(){
-    BorderPane welcomeRoot = new BorderPane(); 
+  private Scene createStartScreen( ){
+    BorderPane welcomeRoot = new BorderPane();
+    Image bckgrnd = new Image ("welcome.jpg");
 
-    TextField welcome = new TextField("WELCOME TO CONNECT 4");
-    welcome.setEditable(false);
+    BackgroundSize bSize = new BackgroundSize(1920, 1080, true, true, true, false);
+
+    welcomeRoot.setBackground(new Background(new BackgroundImage(bckgrnd,
+            BackgroundRepeat.NO_REPEAT,
+            BackgroundRepeat.NO_REPEAT,
+            BackgroundPosition.CENTER,
+            bSize)));
 
     Button readyPlayerOne = new Button("READY PLAYER ONE");
     readyPlayerOne.setOnAction(welcomeEvent);
+    readyPlayerOne.setStyle("-fx-font-family: sans-serif;-fx-font-size:24");
+    VBox v1 = new VBox();
+    v1.getChildren().add(readyPlayerOne);
+    v1.setAlignment(Pos.BOTTOM_RIGHT);
+    welcomeRoot.setBottom(v1);
 
-    welcomeRoot.setCenter(welcome);
-    welcomeRoot.setBottom(readyPlayerOne);
+    return new Scene(welcomeRoot, 1750, 980);
 
-    return new Scene(welcomeRoot, 1920, 980);
   }
 
   //
@@ -321,7 +360,7 @@ public class JavaFXTemplate extends Application {
     winnerroot.setBottom(playerWon);
     winnerroot.setLeft(exit);
 
-    return new Scene(winnerroot, 1920, 980);
+    return new Scene(winnerroot, 1750, 980);
   }
 
 }
