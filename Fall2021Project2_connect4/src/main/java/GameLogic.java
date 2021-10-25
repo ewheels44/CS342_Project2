@@ -42,10 +42,7 @@ public class GameLogic {
         pieces.addXandYcords(pieces, i, j);
         pieces.setOnAction(disableButton(_primarystage));
 
-        // gameboard doesnt abide by the rules of rows and colums apparently
-        // ^ .add takes col first then row
         gameboard.add(pieces, j, i);
-
 
         piceseslocation[i][j] = pieces;
       }
@@ -80,7 +77,6 @@ public class GameLogic {
         JavaFXTemplate.addturnDisp(turn, b1);
         placePiece(b1);
         if(gamedata.isWonGame()){
-          // _primarystage.setScene(JavaFXTemplate.winnerWinnerChickenDinner()); 
           pause.setOnFinished(e -> _primarystage.setScene(JavaFXTemplate.winnerWinnerChickenDinner()));
           pause.play();
         }
@@ -113,7 +109,6 @@ public class GameLogic {
     gamedata.incTotalpices();
     
     gamedata.addplayerMove(_piece);
-    // gamedata.TESTprintplayermovestack();
   }
 
   public int getTotalPieces(){
@@ -122,8 +117,6 @@ public class GameLogic {
 
   public void reversemove(){
     GameButton lastmove = gamedata.popPlayerMove();
-
-    // gamedata.TESTprintplayermovestack();
 
     gamedata.decTotalpieces();
 
@@ -193,22 +186,16 @@ public class GameLogic {
     String columpattern = "";
 
     int startX = GameBoardROW - 1;
-    // int startY = _piece.getYcord() - (_piece.getYcord() - 1);
-    // if(startY <= 1) startY = 0;
+
     int startY = 0;
 
-    // System.out.println("this is starty: " + startY);
 
     for (int j = startY; j < GameBoardCOL; j++) {
       if(piceseslocation[startX][j].getPieceColor() != null){
         columpattern = columpattern.concat(piceseslocation[startX--][j].getPieceColor());
       }
 
-      // System.out.println("Start should decriment: " + startX);
-      // System.out.println("j should decriment: " + j);
     }
-
-    // System.out.println("This is columpattern: " + columpattern);
 
     return Pattern.compile(_winningcombo).matcher(columpattern).matches();
   }
@@ -227,22 +214,13 @@ public class GameLogic {
         columpattern = columpattern.concat(piceseslocation[startX--][j].getPieceColor());
       }
 
-      // System.out.println("Start should decriment: " + startX);
-      // System.out.println("j should decriment: " + j);
     }
-
-    // System.out.println("This is columpattern: " + columpattern);
 
     return Pattern.compile(_winningcombo).matcher(columpattern).matches();
       
   }
 
   public void hasNeighborSameColor(GameButton _piece){
-
-//     Pattern winningCombo = Pattern.compile(".s");
-// 
-    // boolean b1 = Pattern.compile("(.*BBBB.*)|(.*RRRR*.)").matcher("BBRBBBB").matches();
-    // System.out.println(b1);
 
     // String winningCombo = "(BBBB)|(RRRR)";
     // String winningCombo = "(B{4,}+)||(R{4,}+)";
