@@ -86,7 +86,7 @@ public class GameLogic {
 
         if (gamedata.getTotalPieces() + 1 == GameBoardROW * GameBoardCOL) {
           // /= "ITS A TIE";
-          setPlayerWon("Its a tie, play again to settle this dispute");
+          setPlayerWon("TIE");
           pause.setOnFinished(e -> _primarystage.setScene(JavaFXTemplate.winnerWinnerChickenDinner()));
           pause.play();
         }
@@ -135,7 +135,7 @@ public class GameLogic {
 
   // reverse move: going back a move once the user hits the "reverse" button found
   // under "Gameplay menu"
-  public void reversemove() {
+  public void reversemove(Stage _primarystage) {
     // popping the very last move so that we can go back a move
     GameButton lastmove = gamedata.popPlayerMove();
 
@@ -152,7 +152,7 @@ public class GameLogic {
 
     // going back to the old co ordinates
     GameButton newGameButton = new GameButton();
-    // newGameButton.setOnAction(disableButton(_primarystage));
+    newGameButton.setOnAction(disableButton(_primarystage));
     newGameButton.addXandYcords(newGameButton, lastmoveX, lastmoveY);
     gameboard.add(newGameButton, lastmoveY, lastmoveX);
 
@@ -202,8 +202,6 @@ public class GameLogic {
         j = 0;
     }
 
-    System.out.println("This is left right : " + columpattern);
-
     if (Pattern.compile(_winningcombo).matcher(columpattern).matches()) {
       for (int i = 0; i < 4; i++) {
         highlightMe[i].setStyle("-fx-background-color: yellow;");
@@ -237,9 +235,6 @@ public class GameLogic {
       } else
         j = 0;
     }
-
-    System.out.println("This is left right : " + columpattern);
-
     if (Pattern.compile(_winningcombo).matcher(columpattern).matches()) {
       for (int i = 0; i < 4; i++) {
         highlightMe[i].setStyle("-fx-background-color: yellow;");
@@ -254,11 +249,6 @@ public class GameLogic {
   private boolean iswonDiagonalRandL(GameButton _piece, String _winningcombo) {
 
     String diagonalPattern = "";
-    //
-    // System.out.println("X cord: " + _piece.getXcord());
-    // System.out.println("Y cord: " + _piece.getYcord());
-    //
-    //
     GameButton highlightMe[] = new GameButton[4];
 
     int i = 0;
@@ -266,9 +256,6 @@ public class GameLogic {
       int Ycord = _piece.getXcord() + _piece.getYcord() - j;
 
       if (Ycord < GameBoardCOL && Ycord >= 0) {
-        // System.out.println("this is Xcord(iterator): " + j);
-        // System.out.println("This is Ycord(): " + Ycord);
-
         if (_piece.getXcord() < 6) {
           if (piceseslocation[j][Ycord].getPieceColor() != null) {
             diagonalPattern = diagonalPattern.concat(piceseslocation[j][Ycord].getPieceColor());
@@ -283,9 +270,6 @@ public class GameLogic {
         }
       }
     }
-
-    // System.out.println("This is diagonalPattern: " + diagonalPattern);
-
     if (Pattern.compile(_winningcombo).matcher(diagonalPattern).matches()) {
       for (int j = 0; j < 4; j++) {
         highlightMe[j].setStyle("-fx-background-color: yellow;");
@@ -301,18 +285,11 @@ public class GameLogic {
 
     String diagonalPattern = "";
     GameButton highlightMe[] = new GameButton[4];
-
-    // System.out.println("X cord: " + _piece.getXcord());
-    // System.out.println("Y cord: " + _piece.getYcord());
-
     int i = 0;
     for (int j = 0; j < GameBoardROW; j++) {
       int Ycord = _piece.getXcord() - _piece.getYcord() + j;
 
       if (Ycord < GameBoardCOL && Ycord >= 0) {
-        // System.out.println("This is Xcord(): " + Ycord);
-        // System.out.println("this is Ycord(iterator): " + j);
-
         if (Ycord < 6) {
           if (piceseslocation[Ycord][j].getPieceColor() != null) {
             diagonalPattern = diagonalPattern.concat(piceseslocation[Ycord][j].getPieceColor());
@@ -327,8 +304,6 @@ public class GameLogic {
         }
       }
     }
-
-    // System.out.println("This is diagonalPattern: " + diagonalPattern);
 
     if (Pattern.compile(_winningcombo).matcher(diagonalPattern).matches()) {
       for (int j = 0; j < 4; j++) {

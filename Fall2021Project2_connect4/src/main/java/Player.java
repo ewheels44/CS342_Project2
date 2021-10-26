@@ -8,9 +8,7 @@ public class Player{
   private boolean hasGone = false;
 
   // return the turn of the player
-  public int getTurn(){
-    return 0;
-  }
+  public int getTurn(){ return 0; }
   // setting the color of the individual player
   public void setColor(String _color){
     this.color = _color;

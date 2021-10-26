@@ -126,7 +126,7 @@ public class JavaFXTemplate extends Application {
       // reverse the player move to n times user clickes reverse
       // gameLogic.
       if(gameLogic.getTotalPieces() > 0){
-        gameLogic.reversemove();
+        gameLogic.reversemove(_pirmarystage);
       }
     });
 
@@ -382,6 +382,7 @@ public class JavaFXTemplate extends Application {
   //
   // SCENES BELONG HERE
   // final end screen
+  // if user wins / ties the game
   public static Scene winnerWinnerChickenDinner(){
     // final screen after anyone of the player wins
     BorderPane winnerroot = new BorderPane();
@@ -389,8 +390,11 @@ public class JavaFXTemplate extends Application {
     if ( gameLogic.getPlayerWon() == "B" ) {
       winnerroot.setStyle("-fx-background-image: url(blue_won.png)");
     }
-    else{
+    else if ( gameLogic.getPlayerWon() == "R") {
       winnerroot.setStyle("-fx-background-image: url(red_won.jpg)");
+    }
+    else{ // tie
+      winnerroot.setStyle("-fx-background-image: url(end.jpg)");
     }
 
     // if the user hits play agian reset the game board to start a new game
